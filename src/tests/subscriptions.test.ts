@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { setTimeout as delay } from "node:timers/promises";
 import { GetPayment } from "@antelopejs/interface-payment";
 
 import {
@@ -12,6 +13,7 @@ import {
   CHARGEABLE,
   DAY_MS,
   DECLINES_LATER,
+  PROVIDER_CLOCK_RESOLUTION_MS,
   LONGEST_MONTH_MS,
   PERIOD_VALUE,
   SHORTEST_MONTH_MS,
@@ -19,6 +21,7 @@ import {
   TEST_METHOD,
   TEST_METHOD_DECLINES_LATER,
   TRIAL_DAYS,
+  inWholeSeconds,
   assertSubscriptionShape,
   key,
   monthly,
@@ -71,7 +74,7 @@ describe(`creating a subscription (${CHARGEABLE})`, function () {
 
   it("starts a trial without charging anything", async () => {
     const payer = await newPayer();
-    const trialEnd = Date.now() + TRIAL_DAYS * DAY_MS;
+    const trialEnd = inWholeSeconds(TRIAL_DAYS * DAY_MS);
     const subscription = await subscribe(payer, { trialEnd });
 
     assert.equal(subscription.status, "trialing");
@@ -86,7 +89,7 @@ describe(`creating a subscription (${CHARGEABLE})`, function () {
 
   it("defers the first charge to a billing anchor", async () => {
     const payer = await newPayer();
-    const billingAnchor = Date.now() + 3 * DAY_MS;
+    const billingAnchor = inWholeSeconds(3 * DAY_MS);
     const subscription = await subscribe(payer, { billingAnchor });
 
     assert.equal(subscription.status, "active");
@@ -155,8 +158,9 @@ describe(`reading subscriptions back (${CHARGEABLE})`, function () {
     const payer = await newPayer();
     const stranger = await newPayer();
     const older = await subscribe(payer);
+    await delay(PROVIDER_CLOCK_RESOLUTION_MS);
     const newer = await subscribe(payer, {
-      trialEnd: Date.now() + TRIAL_DAYS * DAY_MS,
+      trialEnd: inWholeSeconds(TRIAL_DAYS * DAY_MS),
     });
     await subscribe(stranger);
 
@@ -226,7 +230,7 @@ describe(`a declined first period (${DECLINES_LATER})`, function () {
   it("still starts a trial, since a trial charges nothing", async () => {
     const payer = await newPayer(TEST_METHOD_DECLINES_LATER);
     const subscription = await subscribe(payer, {
-      trialEnd: Date.now() + TRIAL_DAYS * DAY_MS,
+      trialEnd: inWholeSeconds(TRIAL_DAYS * DAY_MS),
     });
     assert.equal(subscription.status, "trialing");
     assert.equal(subscription.amount.value, PERIOD_VALUE);

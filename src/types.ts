@@ -187,13 +187,15 @@ export interface SubscriptionRequest {
   /**
    * Unix epoch milliseconds. Start with a free trial that ends here; the first
    * charge is made at this time. Must be in the future. Mutually exclusive with
-   * `billingAnchor`.
+   * `billingAnchor`. Kept at the provider's precision, which is at least the
+   * second: pass a whole second to have it echoed exactly.
    */
   trialEnd?: number;
   /**
    * Unix epoch milliseconds. Start the first paid period here rather than now;
    * nothing is charged before it, and the status is `active` meanwhile. Must
-   * be in the future. Mutually exclusive with `trialEnd`.
+   * be in the future. Mutually exclusive with `trialEnd`. Kept at the
+   * provider's precision, which is at least the second.
    */
   billingAnchor?: number;
   /** Shown to the payer where supported. */
@@ -241,6 +243,10 @@ export interface SubscriptionEvent {
   /**
    * Opaque payment-interface identifier of the charge behind a
    * `subscription.payment_*` event. Read it with `GetPayment`.
+   *
+   * Absent from a `subscription.payment_failed` when the provider refused to
+   * make the charge at all — the saved method was removed, say — since there is
+   * no payment to point at.
    */
   payment?: string;
 }

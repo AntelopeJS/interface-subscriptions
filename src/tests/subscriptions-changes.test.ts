@@ -10,6 +10,7 @@ import {
   SUITE_TIMEOUT,
   TEST_METHOD,
   TRIAL_DAYS,
+  inWholeSeconds,
   amount,
   key,
   monthly,
@@ -94,7 +95,7 @@ describe(`cancelling (${CHARGEABLE})`, function () {
 
   it("ends a trial now without charging", async () => {
     const subscription = await subscribe(await newPayer(), {
-      trialEnd: Date.now() + TRIAL_DAYS * DAY_MS,
+      trialEnd: inWholeSeconds(TRIAL_DAYS * DAY_MS),
     });
 
     const canceled = await CancelSubscription(subscription.id, key(), "now");
@@ -290,7 +291,7 @@ describe(`events (${OBSERVABLE})`, function () {
 
   it("reports a cancellation", async () => {
     const subscription = await subscribe(await newPayer(), {
-      trialEnd: Date.now() + TRIAL_DAYS * DAY_MS,
+      trialEnd: inWholeSeconds(TRIAL_DAYS * DAY_MS),
     });
     await CancelSubscription(subscription.id, key(), "now");
 

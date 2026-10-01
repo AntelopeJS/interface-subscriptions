@@ -31,6 +31,19 @@ export const SHORTEST_MONTH_MS = SHORTEST_MONTH_DAYS * DAY_MS;
 export const LONGEST_MONTH_MS = LONGEST_MONTH_DAYS * DAY_MS;
 export const TRIAL_DAYS = 14;
 
+/**
+ * Providers keep creation times and schedule times to the second. Two
+ * subscriptions created within the same second may list in either order, and a
+ * requested trial end or billing anchor comes back truncated to the second.
+ */
+export const PROVIDER_CLOCK_RESOLUTION_MS = 1100;
+const SECOND_MS = 1000;
+
+/** A time `ahead` from now, on a whole second, which every provider can echo exactly. */
+export function inWholeSeconds(ahead: number): number {
+  return Math.floor((Date.now() + ahead) / SECOND_MS) * SECOND_MS;
+}
+
 /** An identifier no provider has a subscription for. */
 export const ABSENT_ID = `antelope-absent-${"0".repeat(24)}`;
 
