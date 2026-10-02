@@ -70,7 +70,12 @@ export class InvalidSubscriptionStateError extends SubscriptionError {
  */
 export class SubscriptionPaymentError extends SubscriptionError {
   constructor(
-    /** The declined payment, as the payment interface reported it. */
+    /**
+     * The declined payment, as the payment interface reports it: `failed`, or
+     * `canceled` where the provider voids the declined attempt when it refuses
+     * the subscription (Stripe does). `GetPayment` on its id agrees. The
+     * decline reason is in `failure` when `failed`, and in `providerCode`.
+     */
     public readonly payment: Payment,
     providerCode?: string,
   ) {

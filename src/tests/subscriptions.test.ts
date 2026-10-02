@@ -177,6 +177,8 @@ describe(`reading subscriptions back (${CHARGEABLE})`, function () {
   });
 });
 
+const REFUSED_PAYMENT_STATUSES: readonly string[] = ["failed", "canceled"];
+
 describe(`a declined first period (${DECLINES_LATER})`, function () {
   this.timeout(SUITE_TIMEOUT);
 
@@ -194,9 +196,16 @@ describe(`a declined first period (${DECLINES_LATER})`, function () {
     );
 
     const payment = (error as SubscriptionPaymentError).payment;
-    assert.equal(payment.status, "failed");
-    assert.ok(payment.failure, "the declined payment must say why");
-    assert.equal((await GetPayment(payment.id)).status, "failed");
+    assert.ok(
+      REFUSED_PAYMENT_STATUSES.includes(payment.status),
+      `a declined first charge cannot be ${payment.status}`,
+    );
+    assert.equal(
+      payment.failure !== undefined,
+      payment.status === "failed",
+      "a failed payment says why",
+    );
+    assert.equal((await GetPayment(payment.id)).status, payment.status);
     assert.deepEqual(
       await ListSubscriptions(payer.customer),
       [],
