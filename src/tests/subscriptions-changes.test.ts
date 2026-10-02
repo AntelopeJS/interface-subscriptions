@@ -33,6 +33,8 @@ import {
 } from "../index";
 
 const EVENT_TIMEOUT = 20_000;
+const ABSENT_CUSTOMER = `cus_antelope_absent_${"0".repeat(16)}`;
+const ABSENT_METHOD = `pm_antelope_absent_${"0".repeat(16)}`;
 const EVENT_POLL = 100;
 
 describe(`cancelling (${CHARGEABLE})`, function () {
@@ -242,6 +244,41 @@ describe(`requests outside the contract (${CHARGEABLE})`, function () {
       );
     });
   }
+
+  it("refuses a customer that does not exist, as a request, not a missing subscription", async () => {
+    const payer = await newPayer();
+    await rejectsWith(
+      CreateSubscription(monthly(payer, { customer: ABSENT_CUSTOMER }), key()),
+      InvalidSubscriptionRequestError,
+      "unknown customer",
+    );
+  });
+
+  it("refuses a payment method that does not exist", async () => {
+    const payer = await newPayer();
+    await rejectsWith(
+      CreateSubscription(
+        monthly(payer, { paymentMethod: ABSENT_METHOD }),
+        key(),
+      ),
+      InvalidSubscriptionRequestError,
+      "unknown method",
+    );
+  });
+
+  it("refuses to switch to a method that does not exist, and the subscription stays", async () => {
+    const subscription = await subscribe(await newPayer());
+
+    await rejectsWith(
+      UpdateSubscriptionPaymentMethod(subscription.id, ABSENT_METHOD, key()),
+      InvalidSubscriptionRequestError,
+      "switch to an unknown method",
+    );
+    assert.equal(
+      (await GetSubscription(subscription.id)).paymentMethod,
+      subscription.paymentMethod,
+    );
+  });
 });
 
 describe(`events (${OBSERVABLE})`, function () {
