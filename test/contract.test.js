@@ -11,6 +11,8 @@ const subscriptions = require("../dist/index.js");
  * `src/tests`, against a real implementation.
  */
 
+const HELPERS = ["ValidateSubscriptionRequest"];
+
 const CALLS = [
   "CreateSubscription",
   "GetSubscription",
@@ -24,6 +26,7 @@ it("declares every call the contract documents, and nothing undocumented", () =>
     .filter(([, value]) => typeof value === "function")
     .filter(([name]) => /^[A-Z]/.test(name))
     .filter(([name]) => !name.endsWith("Error"))
+    .filter(([name]) => !HELPERS.includes(name))
     .map(([name]) => name)
     .sort();
 
@@ -184,3 +187,52 @@ it("marks subscription charges with a key a payment webhook handler can test for
   assert.equal(typeof subscriptions.SUBSCRIPTION_METADATA_KEY, "string");
   assert.ok(subscriptions.SUBSCRIPTION_METADATA_KEY.length > 0);
 });
+
+const NOW = Date.UTC(2027, 0, 1);
+const DAY_MS = 24 * 60 * 60 * 1000;
+const VALID = {
+  reference: "account-1",
+  customer: "cus_contract",
+  paymentMethod: "pm_contract",
+  amount: { value: 1900, currency: "EUR" },
+  interval: "month",
+};
+
+it("accepts a request inside the contract", () => {
+  subscriptions.ValidateSubscriptionRequest(VALID, NOW);
+  subscriptions.ValidateSubscriptionRequest(
+    { ...VALID, intervalCount: 3, trialEnd: NOW + DAY_MS },
+    NOW,
+  );
+});
+
+const OUTSIDE = {
+  "a zero amount": { amount: { value: 0, currency: "EUR" } },
+  "a fractional amount": { amount: { value: 10.5, currency: "EUR" } },
+  "a lowercase currency": { amount: { value: 1900, currency: "eur" } },
+  "an interval outside the vocabulary": { interval: "fortnight" },
+  "an interval count of zero": { intervalCount: 0 },
+  "a fractional interval count": { intervalCount: 1.5 },
+  "a trial already over": { trialEnd: NOW - DAY_MS },
+  "a billing anchor in the past": { billingAnchor: NOW },
+  "a trial and an anchor together": {
+    trialEnd: NOW + DAY_MS,
+    billingAnchor: NOW + 2 * DAY_MS,
+  },
+  "no reference": { reference: "" },
+  "no customer": { customer: "" },
+  "no payment method": { paymentMethod: "" },
+};
+
+for (const [label, overrides] of Object.entries(OUTSIDE)) {
+  it(`refuses ${label} as an invalid request`, () => {
+    assert.throws(
+      () =>
+        subscriptions.ValidateSubscriptionRequest(
+          { ...VALID, ...overrides },
+          NOW,
+        ),
+      subscriptions.InvalidSubscriptionRequestError,
+    );
+  });
+}
