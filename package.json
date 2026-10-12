@@ -50,7 +50,7 @@
   "devDependencies": {
     "@antelopejs/interface-core": ">=0.0.5 <1.0.0",
     "@antelopejs/interface-payment": "git+ssh://git@github.com/AntelopeJS/interface-payment.git#9d80f653258e23a820a93bb36b1fa1c8cbc8332f",
-    "@antelopejs/tooling-configs": "^0.0.4",
+    "@antelopejs/tooling-configs": "^0.0.8",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.19.15",
     "eslint-plugin-perfectionist": "^5.11.0",
