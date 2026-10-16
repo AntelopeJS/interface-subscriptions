@@ -45,47 +45,103 @@ is a lie. For those, use the provider's own interface.
 
 ## Quick start
 
-```ts
+```ts docs-check
 import {
   CreatePayment,
+  GetPayment,
   ListPaymentMethods,
 } from "@antelopejs/interface-payment";
-import {
-  CreateSubscription,
-  SubscriptionEvents,
-} from "@antelopejs/interface-subscriptions";
+import { CreateSubscription } from "@antelopejs/interface-subscriptions";
 
-// 1. Take the mandate on-session: a payment that saves the method.
-await CreatePayment(
-  {
-    amount,
-    reference,
-    customer,
-    paymentMethod: token,
-    savePaymentMethod: true,
-    returnUrl,
-  },
-  `save-${orderId}`,
-);
-const [method] = await ListPaymentMethods(customer);
+// 1. Take the mandate with a separate €1 on-session payment.
+export async function startSignup(
+  customer: string,
+  token: string,
+  signupId: string,
+) {
+  const payment = await CreatePayment(
+    {
+      amount: { value: 100, currency: "EUR" },
+      reference: signupId,
+      customer,
+      paymentMethod: token,
+      savePaymentMethod: true,
+      returnUrl: "https://shop.example/billing/return",
+    },
+    `save-${signupId}`,
+  );
 
-// 2. Subscribe. The first period is charged off-session before this resolves.
-const subscription = await CreateSubscription(
-  {
-    reference: accountId,
-    customer,
-    paymentMethod: method.id,
-    amount,
-    interval: "month",
-  },
-  `subscribe-${accountId}`,
-);
+  // The route must redirect the payer when this URL is returned.
+  return {
+    paymentId: payment.id,
+    status: payment.status,
+    redirectUrl:
+      payment.status === "requires_action" ? payment.redirectUrl : undefined,
+  };
+}
 
-// 3. React to what happens while nobody is calling.
+// 2. Resume from trusted server state, not the browser's claimed outcome.
+export async function finishSignup(paymentId: string, accountId: string) {
+  const payment = await GetPayment(paymentId);
+  if (payment.status !== "succeeded" && payment.status !== "authorized") {
+    return undefined; // Still pending/action required, or failed/canceled: do not subscribe.
+  }
+  if (!payment.customer) throw new Error("Signup payment has no customer");
+
+  const methods = await ListPaymentMethods(payment.customer);
+  const method = methods.find((saved) => saved.id === payment.paymentMethod);
+  if (!method) throw new Error("Signup payment has no saved method");
+
+  return CreateSubscription(
+    {
+      reference: accountId,
+      customer: payment.customer,
+      paymentMethod: method.id,
+      amount: { value: 1900, currency: "EUR" },
+      interval: "month",
+    },
+    `subscribe-${payment.id}`,
+  );
+}
+```
+
+Use an existing payment-interface customer and a provider-issued method token.
+Persist a unique `signupId` and the returned `paymentId` against the authenticated
+account. Replace the return URL with your own route and send the payer to
+`redirectUrl` when action is required. If the payment is pending, wait for a
+verified `payment.succeeded` or `payment.authorized` webhook before retrying
+`finishSignup`; failed or canceled payments must not create subscriptions.
+
+Call `finishSignup` with the saved payment ID and account ID, using the same
+provider account throughout. The saved-method payment and the first subscription
+period are separate charges (€1 then €19 here); the first period is charged
+off-session before `CreateSubscription` resolves. Adapt those amounts to your
+billing policy. Register an idempotent handler for subsequent lifecycle events:
+
+```ts
+import { SubscriptionEvents } from "@antelopejs/interface-subscriptions";
+
 SubscriptionEvents.register("billing", async (event) => {
   await grantOrRevokeAccess(event.subscription);
 });
 ```
+
+`grantOrRevokeAccess` stands for your application's access policy. Deduplicate
+events by `event.id` as described in [Events](./docs/3.events.md).
+
+## Compatibility
+
+<!-- docs-compat: ./package.json#peerDependencies -->
+
+| Package                         | Range            |
+| ------------------------------- | ---------------- |
+| `@antelopejs/interface-core`    | `>=0.0.5 <1.0.0` |
+| `@antelopejs/interface-payment` | `>=0.1.0 <1.0.0` |
+
+These are the peer requirements in `package.json`. The payment interface's Git
+revision in `devDependencies` pins this repository's development/test dependency;
+it does not replace the published peer range. Check your implementing module's
+requirements too.
 
 ## Conventions
 
