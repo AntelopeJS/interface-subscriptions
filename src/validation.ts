@@ -1,14 +1,17 @@
 import { InvalidSubscriptionRequestError } from "./errors";
 import { SUBSCRIPTION_INTERVALS, type SubscriptionRequest } from "./types";
 
-type Rule = (request: SubscriptionRequest, now: number) => string | undefined;
+type Rule = (request: SubscriptionRequest, now?: number) => string | undefined;
 
 function positiveInteger(value: unknown): boolean {
   return typeof value === "number" && Number.isInteger(value) && value > 0;
 }
 
-function futureTime(value: number | undefined, now: number): boolean {
-  return value === undefined || (Number.isFinite(value) && value > now);
+function validTime(value: number | undefined, now?: number): boolean {
+  return (
+    value === undefined ||
+    (Number.isFinite(value) && (now === undefined || value > now))
+  );
 }
 
 const RULES: Rule[] = [
@@ -39,28 +42,32 @@ const RULES: Rule[] = [
       ? "trialEnd and billingAnchor are mutually exclusive"
       : undefined,
   (request, now) =>
-    futureTime(request.trialEnd, now)
+    validTime(request.trialEnd, now)
       ? undefined
-      : "trialEnd must be in the future",
+      : "trialEnd must be a finite timestamp in the future",
   (request, now) =>
-    futureTime(request.billingAnchor, now)
+    validTime(request.billingAnchor, now)
       ? undefined
-      : "billingAnchor must be in the future",
+      : "billingAnchor must be a finite timestamp in the future",
 ];
 
 /**
  * Checks a {@link SubscriptionRequest} against the portable contract, so every
- * implementation refuses the same requests the same way. Implementations call
- * it before anything reaches the provider; consumers may call it to check a
- * request early.
+ * implementation refuses the same request shapes. Consumers can supply `now`
+ * to also check that trial and billing dates are in the future.
+ *
+ * Implementations may omit `now` only when their provider validates future
+ * dates after checking for an idempotent replay. This lets a saved result be
+ * returned after its original date has passed without accepting a new request
+ * with a past date. Finite timestamps and all other rules are always checked.
  *
  * @param request - The request to check
- * @param now - Unix epoch milliseconds to measure "in the future" against
+ * @param now - Optional Unix epoch milliseconds for relative date validation
  * @throws InvalidSubscriptionRequestError naming the first rule broken
  */
 export function ValidateSubscriptionRequest(
   request: SubscriptionRequest,
-  now: number,
+  now?: number,
 ): void {
   const problem = RULES.map((rule) => rule(request, now)).find(Boolean);
   if (problem) throw new InvalidSubscriptionRequestError(problem);

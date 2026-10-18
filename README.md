@@ -11,7 +11,7 @@ consumer rebuilding a billing cycle of its own.
 ## Installation
 
 ```bash
-npm install @antelopejs/interface-subscriptions
+pnpm add @antelopejs/interface-subscriptions
 ```
 
 This package declares the contract and ships no billing logic. Wire a module
@@ -26,6 +26,22 @@ that implements it:
 A payment module that cannot do subscriptions simply does not implement this
 interface. There is no half-honoured contract and no `UnsupportedOperationError`
 here.
+
+For Stripe, native subscriptions in `@antelopejs/stripe` are recommended.
+`@antelopejs/payment-subscriptions` is an explicit alternative, not an automatic
+fallback. Wire one renewal owner per subscription, never both.
+
+## Choose a task
+
+- Start or cancel recurring access: [subscriptions](./docs/2.subscriptions.md).
+- Synchronize access after billing: [events](./docs/3.events.md).
+- Implement a billing provider: [implementation guide](./docs/4.implementing.md).
+- Choose native or generic billing: [provider capabilities](./docs/5.provider-capability-matrix.md).
+
+Replay protection lasts only for the provider-defined replay window. Persist
+operation keys, subscription IDs and payment IDs. After expiration, applications
+must reconcile uncertain payments with provider records before retrying; reusing
+a key is not indefinite duplicate-charge protection.
 
 ## What it covers
 
@@ -136,12 +152,11 @@ events by `event.id` as described in [Events](./docs/3.events.md).
 | Package                         | Range            |
 | ------------------------------- | ---------------- |
 | `@antelopejs/interface-core`    | `>=0.0.5 <1.0.0` |
-| `@antelopejs/interface-payment` | `>=0.1.0 <1.0.0` |
+| `@antelopejs/interface-payment` | `>=0.0.1 <1.0.0` |
 
-These are the peer requirements in `package.json`. The payment interface's Git
-revision in `devDependencies` pins this repository's development/test dependency;
-it does not replace the published peer range. Check your implementing module's
-requirements too.
+These are the peer requirements in `package.json`. Development uses the same
+payment-interface semver range. Check your implementing module's requirements
+too. `@antelopejs/core` 1.16.0 is a development test runner, not a runtime peer.
 
 ## Conventions
 
@@ -165,6 +180,20 @@ requirements too.
 | [Events](./docs/3.events.md)                                         | The event set, delivery, and how it relates to payment webhooks |
 | [Implementing](./docs/4.implementing.md)                             | Native and fallback implementations, the conformance suite      |
 | [Provider capability matrix](./docs/5.provider-capability-matrix.md) | Which providers fire renewals themselves, and what that means   |
+
+## Development
+
+Install the published payment interface from npm using the frozen lockfile:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm test
+pnpm lint
+pnpm format:check
+pnpm knip
+```
+
+CI runs the same checks against the published dependency without Git submodules or workspace overrides.
 
 ## Conformance suite
 
