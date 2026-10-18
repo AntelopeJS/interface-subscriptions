@@ -1,7 +1,11 @@
 # @antelopejs/interface-subscriptions
 
-[![npm version](https://img.shields.io/npm/v/@antelopejs/interface-subscriptions.svg)](https://www.npmjs.com/package/@antelopejs/interface-subscriptions)
-[![license](https://img.shields.io/npm/l/@antelopejs/interface-subscriptions.svg)](./LICENSE)
+<div align="center">
+<a href="https://www.npmjs.com/package/@antelopejs/interface-subscriptions"><img alt="npm" src="https://img.shields.io/npm/v/@antelopejs/interface-subscriptions?style=for-the-badge&labelColor=000000&color=000000"></a>
+<a href="./LICENSE"><img alt="License" src="https://img.shields.io/npm/l/@antelopejs/interface-subscriptions?style=for-the-badge&labelColor=000000&color=000000"></a>
+<a href="https://discord.gg/sjK28QHrA7"><img alt="Discord" src="https://img.shields.io/badge/Discord-18181B?logo=discord&style=for-the-badge&color=000000"></a>
+<a href="./docs/1.introduction.md"><img alt="Docs" src="https://img.shields.io/badge/Docs-18181B?style=for-the-badge&color=000000"></a>
+</div>
 
 Provider-agnostic subscriptions for AntelopeJS. Bill a saved payment method
 every period — with trials, a billing anchor, cancellation now or at period end,
@@ -183,7 +187,7 @@ too. `@antelopejs/core` 1.16.0 is a development test runner, not a runtime peer.
 
 ## Development
 
-Install the published payment interface from npm using the frozen lockfile:
+Use Node.js 24 and pnpm 10.6.5. Install the published payment interface from npm using the frozen lockfile:
 
 ```bash
 pnpm install --frozen-lockfile
@@ -211,6 +215,10 @@ every renewal path and is the executable specification for the rest.
 | `ANTELOPE_SUBSCRIPTIONS_TEST_EVENTS`                | Set when events can reach the test process. A native provider delivers them by webhook, which usually cannot. |
 | `ANTELOPE_PAYMENT_TEST_CURRENCY`                    | ISO-4217 code to run against. Defaults to `EUR`.                                                              |
 
+## Contributing
+
+Read [CONTRIBUTING.md](./CONTRIBUTING.md) and run the [development checks](#development) before opening a pull request. Local contract tests do not require provider credentials; the provider conformance suite is a separate integration check.
+
 ## License
 
-Apache-2.0
+[Apache-2.0](./LICENSE)
