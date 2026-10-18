@@ -152,7 +152,7 @@ events by `event.id` as described in [Events](./docs/3.events.md).
 | Package                         | Range            |
 | ------------------------------- | ---------------- |
 | `@antelopejs/interface-core`    | `>=0.0.5 <1.0.0` |
-| `@antelopejs/interface-payment` | `>=0.1.0 <1.0.0` |
+| `@antelopejs/interface-payment` | `>=0.0.1 <1.0.0` |
 
 These are the peer requirements in `package.json`. Development uses the same
 payment-interface semver range. Check your implementing module's requirements
@@ -181,21 +181,19 @@ too. `@antelopejs/core` 1.16.0 is a development test runner, not a runtime peer.
 | [Implementing](./docs/4.implementing.md)                             | Native and fallback implementations, the conformance suite      |
 | [Provider capability matrix](./docs/5.provider-capability-matrix.md) | Which providers fire renewals themselves, and what that means   |
 
-## Development before publication
+## Development
 
-The payment interface is pinned as a Git submodule until its npm package is available. Initialize the checkout and build it before running this repository's checks:
+Install the published payment interface from npm using the frozen lockfile:
 
 ```bash
-git submodule update --init
 pnpm install --frozen-lockfile
-pnpm --filter @antelopejs/interface-payment build
 pnpm test
 pnpm lint
 pnpm format:check
 pnpm knip
 ```
 
-CI uses the same source revision and frozen lockfile without private Git credentials. The published manifest retains npm version ranges. Before releasing this interface, publish the payment interface, remove the source submodule and workspace override, regenerate the standalone lockfile, and rerun CI against the published package.
+CI runs the same checks against the published dependency without Git submodules or workspace overrides.
 
 ## Conformance suite
 

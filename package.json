@@ -1,6 +1,6 @@
 {
   "name": "@antelopejs/interface-subscriptions",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Provider-agnostic AntelopeJS subscriptions interface: recurring billing of a saved payment method, with trials, cancellation and normalised lifecycle events",
   "keywords": [
     "antelopejs",
@@ -54,7 +54,7 @@
   "devDependencies": {
     "@antelopejs/core": "1.16.0",
     "@antelopejs/interface-core": ">=0.0.5 <1.0.0",
-    "@antelopejs/interface-payment": ">=0.1.0 <1.0.0",
+    "@antelopejs/interface-payment": ">=0.0.1 <1.0.0",
     "@antelopejs/tooling-configs": "^0.0.8",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.19.15",
@@ -70,7 +70,7 @@
   },
   "peerDependencies": {
     "@antelopejs/interface-core": ">=0.0.5 <1.0.0",
-    "@antelopejs/interface-payment": ">=0.1.0 <1.0.0"
+    "@antelopejs/interface-payment": ">=0.0.1 <1.0.0"
   },
   "packageManager": "pnpm@10.6.5",
   "antelopeJs": {

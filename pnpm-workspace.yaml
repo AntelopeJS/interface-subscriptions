@@ -1,7 +1,0 @@
-packages:
-  - "."
-  - ".ci/dependencies/*"
-
-# Source-only validation until the payment interface is published.
-overrides:
-  "@antelopejs/interface-payment": workspace:*
