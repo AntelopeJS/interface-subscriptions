@@ -236,3 +236,46 @@ for (const [label, overrides] of Object.entries(OUTSIDE)) {
     );
   });
 }
+
+it("can defer relative date validation to an idempotent provider", () => {
+  for (const field of ["trialEnd", "billingAnchor"]) {
+    const request = { ...VALID, [field]: NOW - DAY_MS };
+    assert.doesNotThrow(() =>
+      subscriptions.ValidateSubscriptionRequest(request),
+    );
+    assert.throws(
+      () => subscriptions.ValidateSubscriptionRequest(request, NOW),
+      subscriptions.InvalidSubscriptionRequestError,
+    );
+    for (const value of [NaN, Infinity, -Infinity]) {
+      assert.throws(
+        () =>
+          subscriptions.ValidateSubscriptionRequest({
+            ...VALID,
+            [field]: value,
+          }),
+        subscriptions.InvalidSubscriptionRequestError,
+      );
+    }
+  }
+});
+
+it("still enforces the portable shape when the provider owns relative dates", () => {
+  assert.throws(
+    () =>
+      subscriptions.ValidateSubscriptionRequest({
+        ...VALID,
+        amount: { value: 0, currency: "EUR" },
+      }),
+    subscriptions.InvalidSubscriptionRequestError,
+  );
+  assert.throws(
+    () =>
+      subscriptions.ValidateSubscriptionRequest({
+        ...VALID,
+        trialEnd: NOW,
+        billingAnchor: NOW,
+      }),
+    subscriptions.InvalidSubscriptionRequestError,
+  );
+});
