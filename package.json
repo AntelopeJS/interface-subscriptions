@@ -9,6 +9,10 @@
     "recurring",
     "subscription"
   ],
+  "homepage": "https://github.com/AntelopeJS/interface-subscriptions/tree/main/docs",
+  "bugs": {
+    "url": "https://github.com/AntelopeJS/interface-subscriptions/issues"
+  },
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -48,8 +52,9 @@
     "knip": "knip"
   },
   "devDependencies": {
+    "@antelopejs/core": "1.16.0",
     "@antelopejs/interface-core": ">=0.0.5 <1.0.0",
-    "@antelopejs/interface-payment": "git+ssh://git@github.com/AntelopeJS/interface-payment.git#9d80f653258e23a820a93bb36b1fa1c8cbc8332f",
+    "@antelopejs/interface-payment": ">=0.1.0 <1.0.0",
     "@antelopejs/tooling-configs": "^0.0.8",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.19.15",

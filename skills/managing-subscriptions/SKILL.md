@@ -1,11 +1,28 @@
 ---
-name: subscriptions-interface
-description: Provider-agnostic AntelopeJS subscriptions — bill a saved payment method every period, with trials, a billing anchor, past_due reporting, cancellation now or at period end, and lifecycle events. Use when code imports "@antelopejs/interface-subscriptions", when an AntelopeJS module sells recurring access or renews anything on a schedule against a payment provider, or when you encounter CreateSubscription, CancelSubscription, UpdateSubscriptionPaymentMethod, SubscriptionEvents, SubscriptionStatus, past_due, or SUBSCRIPTION_METADATA_KEY.
+name: managing-subscriptions
+description: Creates and cancels AntelopeJS recurring billing and synchronizes access from lifecycle events. Use when adding subscriptions, recovering past_due accounts, or implementing a subscription provider.
 category: antelopejs-interface
 tags: [subscriptions, billing, recurring, payment, antelopejs]
 ---
 
 # subscriptions interface
+
+## Task workflow
+
+1. Read `README.md` for task paths and compatibility. Recommend Stripe native
+   billing with Stripe; select `@antelopejs/payment-subscriptions` only as an
+   explicit alternative. Assign one renewal owner per subscription.
+2. Follow `docs/2.subscriptions.md`: save a method on-session, confirm success
+   or authorization, then subscribe using IDs from the same provider account.
+3. Persist operation keys and subscription/payment IDs. Replay protection lasts
+   only for the provider-defined replay window. After expiration, reconcile
+   uncertain payments before retrying; the same key can charge again.
+4. Follow `docs/3.events.md` to deduplicate lifecycle events and synchronize
+   access from status, not an assumed retry date.
+5. For provider work, read `docs/4.implementing.md`, preserve replay-before-date
+   validation, run `pnpm test`, then run conformance with real provider fixtures.
+   Completion means creation, cancellation and recovery are checked and skipped
+   renewal/webhook coverage is reported explicitly.
 
 Recurring billing without a billing cycle in your own module. Every call is an
 `InterfaceFunction`, so it is async and queues until an implementation attaches.
@@ -68,7 +85,7 @@ import type {
 ## Subscribing
 
 ```ts
-await CreatePayment(
+const signupPayment = await CreatePayment(
   {
     amount,
     reference,
@@ -79,7 +96,12 @@ await CreatePayment(
   },
   `save-${accountId}`,
 );
+if (!["succeeded", "authorized"].includes(signupPayment.status)) {
+  // Persist the payment ID and resume after verified settlement or payer action.
+  return;
+}
 const [method] = await ListPaymentMethods(customer);
+if (!method) throw new Error("No saved payment method after signup");
 
 const subscription = await CreateSubscription(
   {

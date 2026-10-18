@@ -22,10 +22,14 @@ import type {
  * Every charge is an off-session payment-interface payment against
  * `paymentMethod`, carrying {@link SUBSCRIPTION_METADATA_KEY} in its metadata.
  *
+ * Implementations must document their replay window and resolve retained
+ * replays before checking whether the original trial or billing date has passed.
+ *
  * @param request - Who, what, how often, and when to start
- * @param idempotencyKey - Caller-generated key; replaying it returns the
- *   original subscription, or the original rejection, rather than creating or
- *   charging a second time
+ * @param idempotencyKey - Caller-generated key; within the provider-defined
+ *   replay window, returns the saved outcome (including rejections where
+ *   retained). After expiration, applications must reconcile uncertain payments
+ *   and subscription creation before retrying; the same key may charge again.
  * @param provider - Optional payment account selector, passed through to the
  *   payment interface. Later calls on the subscription must name the same one.
  * @returns The subscription
@@ -72,8 +76,8 @@ export const ListSubscriptions =
  * error. Asking for `now` on one set to end at period end ends it now.
  *
  * @param id - Opaque subscription identifier
- * @param idempotencyKey - Caller-generated key; replaying it returns the
- *   subscription rather than raising a state error
+ * @param idempotencyKey - Caller-generated key; replaying it within the
+ *   provider-defined replay window returns the saved subscription
  * @param timing - `now`, or `period_end`; see {@link CancellationTiming}
  * @param provider - Optional payment account selector
  * @returns The subscription after the change
@@ -100,7 +104,8 @@ export const CancelSubscription =
  * @param id - Opaque subscription identifier
  * @param paymentMethod - Opaque payment-interface identifier of a method saved
  *   against the subscription's customer
- * @param idempotencyKey - Caller-generated key; replaying it is safe
+ * @param idempotencyKey - Caller-generated key; replay is safe within the
+ *   provider-defined replay window
  * @param provider - Optional payment account selector
  * @returns The subscription after the change
  * @throws SubscriptionNotFoundError if no subscription has that identifier
