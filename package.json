@@ -1,6 +1,6 @@
 {
   "name": "@antelopejs/interface-subscriptions",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Provider-agnostic AntelopeJS subscriptions interface: recurring billing of a saved payment method, with trials, cancellation and normalised lifecycle events",
   "keywords": [
     "antelopejs",
