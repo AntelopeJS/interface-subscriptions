@@ -181,6 +181,22 @@ too. `@antelopejs/core` 1.16.0 is a development test runner, not a runtime peer.
 | [Implementing](./docs/4.implementing.md)                             | Native and fallback implementations, the conformance suite      |
 | [Provider capability matrix](./docs/5.provider-capability-matrix.md) | Which providers fire renewals themselves, and what that means   |
 
+## Development before publication
+
+The payment interface is pinned as a Git submodule until its npm package is available. Initialize the checkout and build it before running this repository's checks:
+
+```bash
+git submodule update --init
+pnpm install --frozen-lockfile
+pnpm --filter @antelopejs/interface-payment build
+pnpm test
+pnpm lint
+pnpm format:check
+pnpm knip
+```
+
+CI uses the same source revision and frozen lockfile without private Git credentials. The published manifest retains npm version ranges. Before releasing this interface, publish the payment interface, remove the source submodule and workspace override, regenerate the standalone lockfile, and rerun CI against the published package.
+
 ## Conformance suite
 
 `src/tests/` ships in the package as `dist/tests` and runs against whichever

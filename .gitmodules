@@ -1,0 +1,3 @@
+[submodule ".ci/dependencies/interface-payment"]
+	path = .ci/dependencies/interface-payment
+	url = https://github.com/AntelopeJS/interface-payment.git
