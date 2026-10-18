@@ -15,8 +15,8 @@ importers:
         specifier: '>=0.0.5 <1.0.0'
         version: 0.1.1
       '@antelopejs/interface-payment':
-        specifier: '>=0.0.1 <1.0.0'
-        version: 0.0.1(@antelopejs/interface-core@0.1.1)
+        specifier: '>=0.0.2 <1.0.0'
+        version: 0.0.2(@antelopejs/interface-core@0.1.1)
       '@antelopejs/tooling-configs':
         specifier: ^0.0.8
         version: 0.0.8(eslint-plugin-perfectionist@5.12.1(eslint@10.11.0(jiti@2.7.0))(typescript@5.9.3))(knip@6.39.0)(oxfmt@0.66.0)(oxlint@1.81.0(oxlint-tsgolint@7.0.2003))
@@ -67,8 +67,8 @@ packages:
   '@antelopejs/interface-core@0.2.4':
     resolution: {integrity: sha512-2qF6/KwahCQvvNuC/piUvPWD4wq2Npmco941HMg2/bMBoJKbhMH16WcXXRvPYznNSkU0U+6vqK6KE+2N5NojSA==}
 
-  '@antelopejs/interface-payment@0.0.1':
-    resolution: {integrity: sha512-2RlSdULQSbqa3pFOD7tjGSo2VhlLphFnZjYvzflVy/It/WF1iWb9BSQRSA8hvncrNPTTDDo92aa0U7L6bz7XEg==}
+  '@antelopejs/interface-payment@0.0.2':
+    resolution: {integrity: sha512-U72ATKewYgs628xT5MVO70IutcVXGOpw8Vnb7iUh3wjOLLn3pK13RR5rMrMuSnBbIzhltvFpBT4f4rjSDArHSw==}
     peerDependencies:
       '@antelopejs/interface-core': '>=0.0.3 <1.0.0'
 
@@ -2440,7 +2440,7 @@ snapshots:
     dependencies:
       reflect-metadata: 0.2.2
 
-  '@antelopejs/interface-payment@0.0.1(@antelopejs/interface-core@0.1.1)':
+  '@antelopejs/interface-payment@0.0.2(@antelopejs/interface-core@0.1.1)':
     dependencies:
       '@antelopejs/interface-core': 0.1.1
 

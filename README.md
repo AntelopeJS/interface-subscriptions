@@ -152,7 +152,7 @@ events by `event.id` as described in [Events](./docs/3.events.md).
 | Package                         | Range            |
 | ------------------------------- | ---------------- |
 | `@antelopejs/interface-core`    | `>=0.0.5 <1.0.0` |
-| `@antelopejs/interface-payment` | `>=0.0.1 <1.0.0` |
+| `@antelopejs/interface-payment` | `>=0.0.2 <1.0.0` |
 
 These are the peer requirements in `package.json`. Development uses the same
 payment-interface semver range. Check your implementing module's requirements
