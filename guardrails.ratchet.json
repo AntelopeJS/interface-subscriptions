@@ -1,0 +1,13 @@
+{
+  "rules": {
+    "antelopejs/require-assertion": 6,
+    "anti-slop/no-known-value-widening": 1,
+    "anti-slop/no-runtime-typeof": 4,
+    "anti-slop/no-shape-in-symbol-names": 5,
+    "anti-slop/no-unknown-parameters": 2,
+    "anti-slop/no-unsafe-dictionary-type": 1,
+    "anti-slop/require-safety-comment-for-type-assertion": 5,
+    "typescript/require-array-sort-compare": 1
+  },
+  "oversizeFiles": {}
+}
