@@ -115,6 +115,7 @@ describe(`cancelling (${CHARGEABLE})`, function () {
         InvalidSubscriptionStateError,
         `cancel ${timing} after the end`,
       );
+      assert.ok(error instanceof InvalidSubscriptionStateError);
       assert.equal(error.status, "canceled");
     }
   });
@@ -215,27 +216,25 @@ describe(`requests outside the contract (${CHARGEABLE})`, function () {
     if (!TEST_METHOD) this.skip();
   });
 
-  function invalidRequests() {
-    return {
-      "a zero amount": () => ({ amount: amount(0) }),
-      "a fractional amount": () => ({ amount: amount(10.5) }),
-      "an interval count of zero": () => ({ intervalCount: 0 }),
-      "a fractional interval count": () => ({ intervalCount: 1.5 }),
-      "an interval outside the vocabulary": () => ({
-        interval: "fortnight" as SubscriptionRequest["interval"],
-      }),
-      "a trial that has already ended": (now) => ({ trialEnd: now - DAY_MS }),
-      "a billing anchor in the past": (now) => ({
-        billingAnchor: now - DAY_MS,
-      }),
-      "both a trial and a billing anchor": (now) => ({
-        trialEnd: now + DAY_MS,
-        billingAnchor: now + 2 * DAY_MS,
-      }),
-    } satisfies Record<string, (now: number) => Partial<SubscriptionRequest>>;
-  }
+  const INVALID = {
+    "a zero amount": () => ({ amount: amount(0) }),
+    "a fractional amount": () => ({ amount: amount(10.5) }),
+    "an interval count of zero": () => ({ intervalCount: 0 }),
+    "a fractional interval count": () => ({ intervalCount: 1.5 }),
+    "an interval outside the vocabulary": () => ({
+      interval: "fortnight" as SubscriptionRequest["interval"],
+    }),
+    "a trial that has already ended": (now) => ({ trialEnd: now - DAY_MS }),
+    "a billing anchor in the past": (now) => ({
+      billingAnchor: now - DAY_MS,
+    }),
+    "both a trial and a billing anchor": (now) => ({
+      trialEnd: now + DAY_MS,
+      billingAnchor: now + 2 * DAY_MS,
+    }),
+  } satisfies Record<string, (now: number) => Partial<SubscriptionRequest>>;
 
-  for (const [label, overrides] of Object.entries(invalidRequests())) {
+  for (const [label, overrides] of Object.entries(INVALID)) {
     it(`refuses ${label}`, async () => {
       const payer = await newPayer();
       await assert.rejects(

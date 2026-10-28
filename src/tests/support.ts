@@ -132,10 +132,7 @@ export function assertSubscriptionShape(
   assert.equal(subscription.interval, request.interval);
   assert.equal(subscription.intervalCount, request.intervalCount ?? 1);
   assert.deepEqual(subscription.amount, request.amount);
-  assert.ok(
-    [true, false].includes(subscription.cancelAtPeriodEnd),
-    "cancelAtPeriodEnd must be a boolean",
-  );
+  assert.equal(typeof subscription.cancelAtPeriodEnd, "boolean");
   assertEpochMillis(subscription.createdAt, "createdAt");
   assertEpochMillis(subscription.currentPeriodStart, "currentPeriodStart");
   assertEpochMillis(
@@ -259,20 +256,18 @@ export async function subscribe(
  * Asserts that a call rejects with exactly the given error class, rather than
  * any Error at all.
  */
-export async function rejectsWith<Rejection extends Error>(
+export async function rejectsWith(
   work: Promise<unknown>,
-  expected: abstract new (...args: never[]) => Rejection,
+  expected: abstract new (...args: never[]) => Error,
   label: string,
-): Promise<Rejection> {
-  let rejection: unknown;
-  try {
-    await work;
-  } catch (caught) {
-    rejection = caught;
-  }
-  assert.ok(
-    rejection instanceof expected,
-    `${label}: expected ${expected.name}, got ${String(rejection)}`,
+): Promise<Error> {
+  const error: unknown = await work.then(
+    () => undefined,
+    (reason) => reason,
   );
-  return rejection;
+  assert.ok(
+    error instanceof expected,
+    `${label}: expected ${expected.name}, got ${String(error)}`,
+  );
+  return error;
 }
