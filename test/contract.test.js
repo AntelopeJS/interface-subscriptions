@@ -199,10 +199,14 @@ const VALID = {
 };
 
 it("accepts a request inside the contract", () => {
-  subscriptions.ValidateSubscriptionRequest(VALID, NOW);
-  subscriptions.ValidateSubscriptionRequest(
-    { ...VALID, intervalCount: 3, trialEnd: NOW + DAY_MS },
-    NOW,
+  assert.doesNotThrow(() =>
+    subscriptions.ValidateSubscriptionRequest(VALID, NOW),
+  );
+  assert.doesNotThrow(() =>
+    subscriptions.ValidateSubscriptionRequest(
+      { ...VALID, intervalCount: 3, trialEnd: NOW + DAY_MS },
+      NOW,
+    ),
   );
 });
 

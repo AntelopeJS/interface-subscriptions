@@ -174,7 +174,7 @@ describe(`changing the payment method (${CHARGEABLE})`, function () {
     const subscription = await subscribe(payer);
     await CancelSubscription(subscription.id, key(), "now");
 
-    await rejectsWith(
+    await assert.rejects(
       UpdateSubscriptionPaymentMethod(
         subscription.id,
         payer.paymentMethod,
@@ -190,17 +190,17 @@ describe("unknown subscriptions", function () {
   this.timeout(SUITE_TIMEOUT);
 
   it("raises SubscriptionNotFoundError for every call on an unknown id", async () => {
-    await rejectsWith(
+    await assert.rejects(
       GetSubscription(ABSENT_ID),
       SubscriptionNotFoundError,
       "get",
     );
-    await rejectsWith(
+    await assert.rejects(
       CancelSubscription(ABSENT_ID, key(), "now"),
       SubscriptionNotFoundError,
       "cancel",
     );
-    await rejectsWith(
+    await assert.rejects(
       UpdateSubscriptionPaymentMethod(ABSENT_ID, "pm_absent", key()),
       SubscriptionNotFoundError,
       "update",
@@ -237,7 +237,7 @@ describe(`requests outside the contract (${CHARGEABLE})`, function () {
   for (const [label, overrides] of Object.entries(INVALID)) {
     it(`refuses ${label}`, async () => {
       const payer = await newPayer();
-      await rejectsWith(
+      await assert.rejects(
         CreateSubscription(monthly(payer, overrides(Date.now())), key()),
         InvalidSubscriptionRequestError,
         label,
@@ -247,7 +247,7 @@ describe(`requests outside the contract (${CHARGEABLE})`, function () {
 
   it("refuses a customer that does not exist, as a request, not a missing subscription", async () => {
     const payer = await newPayer();
-    await rejectsWith(
+    await assert.rejects(
       CreateSubscription(monthly(payer, { customer: ABSENT_CUSTOMER }), key()),
       InvalidSubscriptionRequestError,
       "unknown customer",
@@ -256,7 +256,7 @@ describe(`requests outside the contract (${CHARGEABLE})`, function () {
 
   it("refuses a payment method that does not exist", async () => {
     const payer = await newPayer();
-    await rejectsWith(
+    await assert.rejects(
       CreateSubscription(
         monthly(payer, { paymentMethod: ABSENT_METHOD }),
         key(),
