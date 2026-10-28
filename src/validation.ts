@@ -3,8 +3,8 @@ import { SUBSCRIPTION_INTERVALS, type SubscriptionRequest } from "./types";
 
 type Rule = (request: SubscriptionRequest, now?: number) => string | undefined;
 
-function positiveInteger(value: unknown): boolean {
-  return typeof value === "number" && Number.isInteger(value) && value > 0;
+function positiveInteger(value: number | undefined): boolean {
+  return value !== undefined && Number.isInteger(value) && value > 0;
 }
 
 function validTime(value: number | undefined, now?: number): boolean {

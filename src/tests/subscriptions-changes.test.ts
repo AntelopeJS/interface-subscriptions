@@ -115,7 +115,7 @@ describe(`cancelling (${CHARGEABLE})`, function () {
         InvalidSubscriptionStateError,
         `cancel ${timing} after the end`,
       );
-      assert.equal((error as InvalidSubscriptionStateError).status, "canceled");
+      assert.equal(error.status, "canceled");
     }
   });
 
@@ -215,8 +215,8 @@ describe(`requests outside the contract (${CHARGEABLE})`, function () {
     if (!TEST_METHOD) this.skip();
   });
 
-  const INVALID: Record<string, (now: number) => Partial<SubscriptionRequest>> =
-    {
+  function invalidRequests() {
+    return {
       "a zero amount": () => ({ amount: amount(0) }),
       "a fractional amount": () => ({ amount: amount(10.5) }),
       "an interval count of zero": () => ({ intervalCount: 0 }),
@@ -232,9 +232,10 @@ describe(`requests outside the contract (${CHARGEABLE})`, function () {
         trialEnd: now + DAY_MS,
         billingAnchor: now + 2 * DAY_MS,
       }),
-    };
+    } satisfies Record<string, (now: number) => Partial<SubscriptionRequest>>;
+  }
 
-  for (const [label, overrides] of Object.entries(INVALID)) {
+  for (const [label, overrides] of Object.entries(invalidRequests())) {
     it(`refuses ${label}`, async () => {
       const payer = await newPayer();
       await assert.rejects(
