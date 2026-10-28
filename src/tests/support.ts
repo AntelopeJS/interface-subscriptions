@@ -261,9 +261,9 @@ export async function rejectsWith(
   expected: abstract new (...args: never[]) => Error,
   label: string,
 ): Promise<Error> {
-  const error = await work.then(
+  const error: unknown = await work.then(
     () => undefined,
-    (reason: unknown) => reason,
+    (reason) => reason,
   );
   assert.ok(
     error instanceof expected,

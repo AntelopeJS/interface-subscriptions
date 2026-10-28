@@ -195,7 +195,8 @@ describe(`a declined first period (${DECLINES_LATER})`, function () {
       "a declined first period",
     );
 
-    const payment = (error as SubscriptionPaymentError).payment;
+    assert.ok(error instanceof SubscriptionPaymentError);
+    const payment = error.payment;
     assert.ok(
       REFUSED_PAYMENT_STATUSES.includes(payment.status),
       `a declined first charge cannot be ${payment.status}`,
@@ -229,9 +230,11 @@ describe(`a declined first period (${DECLINES_LATER})`, function () {
       "replay",
     );
 
+    assert.ok(first instanceof SubscriptionPaymentError);
+    assert.ok(replay instanceof SubscriptionPaymentError);
     assert.equal(
-      (replay as SubscriptionPaymentError).payment.id,
-      (first as SubscriptionPaymentError).payment.id,
+      replay.payment.id,
+      first.payment.id,
       "a replay must not charge again",
     );
   });

@@ -115,7 +115,8 @@ describe(`cancelling (${CHARGEABLE})`, function () {
         InvalidSubscriptionStateError,
         `cancel ${timing} after the end`,
       );
-      assert.equal((error as InvalidSubscriptionStateError).status, "canceled");
+      assert.ok(error instanceof InvalidSubscriptionStateError);
+      assert.equal(error.status, "canceled");
     }
   });
 
@@ -174,7 +175,7 @@ describe(`changing the payment method (${CHARGEABLE})`, function () {
     const subscription = await subscribe(payer);
     await CancelSubscription(subscription.id, key(), "now");
 
-    await rejectsWith(
+    await assert.rejects(
       UpdateSubscriptionPaymentMethod(
         subscription.id,
         payer.paymentMethod,
@@ -190,17 +191,17 @@ describe("unknown subscriptions", function () {
   this.timeout(SUITE_TIMEOUT);
 
   it("raises SubscriptionNotFoundError for every call on an unknown id", async () => {
-    await rejectsWith(
+    await assert.rejects(
       GetSubscription(ABSENT_ID),
       SubscriptionNotFoundError,
       "get",
     );
-    await rejectsWith(
+    await assert.rejects(
       CancelSubscription(ABSENT_ID, key(), "now"),
       SubscriptionNotFoundError,
       "cancel",
     );
-    await rejectsWith(
+    await assert.rejects(
       UpdateSubscriptionPaymentMethod(ABSENT_ID, "pm_absent", key()),
       SubscriptionNotFoundError,
       "update",
@@ -215,29 +216,28 @@ describe(`requests outside the contract (${CHARGEABLE})`, function () {
     if (!TEST_METHOD) this.skip();
   });
 
-  const INVALID: Record<string, (now: number) => Partial<SubscriptionRequest>> =
-    {
-      "a zero amount": () => ({ amount: amount(0) }),
-      "a fractional amount": () => ({ amount: amount(10.5) }),
-      "an interval count of zero": () => ({ intervalCount: 0 }),
-      "a fractional interval count": () => ({ intervalCount: 1.5 }),
-      "an interval outside the vocabulary": () => ({
-        interval: "fortnight" as SubscriptionRequest["interval"],
-      }),
-      "a trial that has already ended": (now) => ({ trialEnd: now - DAY_MS }),
-      "a billing anchor in the past": (now) => ({
-        billingAnchor: now - DAY_MS,
-      }),
-      "both a trial and a billing anchor": (now) => ({
-        trialEnd: now + DAY_MS,
-        billingAnchor: now + 2 * DAY_MS,
-      }),
-    };
+  const INVALID = {
+    "a zero amount": () => ({ amount: amount(0) }),
+    "a fractional amount": () => ({ amount: amount(10.5) }),
+    "an interval count of zero": () => ({ intervalCount: 0 }),
+    "a fractional interval count": () => ({ intervalCount: 1.5 }),
+    "an interval outside the vocabulary": () => ({
+      interval: "fortnight" as SubscriptionRequest["interval"],
+    }),
+    "a trial that has already ended": (now) => ({ trialEnd: now - DAY_MS }),
+    "a billing anchor in the past": (now) => ({
+      billingAnchor: now - DAY_MS,
+    }),
+    "both a trial and a billing anchor": (now) => ({
+      trialEnd: now + DAY_MS,
+      billingAnchor: now + 2 * DAY_MS,
+    }),
+  } satisfies Record<string, (now: number) => Partial<SubscriptionRequest>>;
 
   for (const [label, overrides] of Object.entries(INVALID)) {
     it(`refuses ${label}`, async () => {
       const payer = await newPayer();
-      await rejectsWith(
+      await assert.rejects(
         CreateSubscription(monthly(payer, overrides(Date.now())), key()),
         InvalidSubscriptionRequestError,
         label,
@@ -247,7 +247,7 @@ describe(`requests outside the contract (${CHARGEABLE})`, function () {
 
   it("refuses a customer that does not exist, as a request, not a missing subscription", async () => {
     const payer = await newPayer();
-    await rejectsWith(
+    await assert.rejects(
       CreateSubscription(monthly(payer, { customer: ABSENT_CUSTOMER }), key()),
       InvalidSubscriptionRequestError,
       "unknown customer",
@@ -256,7 +256,7 @@ describe(`requests outside the contract (${CHARGEABLE})`, function () {
 
   it("refuses a payment method that does not exist", async () => {
     const payer = await newPayer();
-    await rejectsWith(
+    await assert.rejects(
       CreateSubscription(
         monthly(payer, { paymentMethod: ABSENT_METHOD }),
         key(),

@@ -23,7 +23,7 @@ const CALLS = [
 
 it("declares every call the contract documents, and nothing undocumented", () => {
   const declared = Object.entries(subscriptions)
-    .filter(([, value]) => typeof value === "function")
+    .filter(([, value]) => value instanceof Function)
     .filter(([name]) => /^[A-Z]/.test(name))
     .filter(([name]) => !name.endsWith("Error"))
     .filter(([name]) => !HELPERS.includes(name))
@@ -53,12 +53,17 @@ it("reports past_due as a status of its own", () => {
 });
 
 it("names an event for every way a subscription changes on its own", () => {
-  assert.deepEqual([...subscriptions.SUBSCRIPTION_EVENT_TYPES].sort(), [
-    "subscription.canceled",
-    "subscription.created",
-    "subscription.payment_failed",
-    "subscription.payment_succeeded",
-  ]);
+  const byCodeUnit = (left, right) =>
+    left < right ? -1 : left > right ? 1 : 0;
+  assert.deepEqual(
+    [...subscriptions.SUBSCRIPTION_EVENT_TYPES].sort(byCodeUnit),
+    [
+      "subscription.canceled",
+      "subscription.created",
+      "subscription.payment_failed",
+      "subscription.payment_succeeded",
+    ],
+  );
 });
 
 const VOCABULARIES = [
@@ -184,8 +189,7 @@ it("says which status blocked a call", () => {
 });
 
 it("marks subscription charges with a key a payment webhook handler can test for", () => {
-  assert.equal(typeof subscriptions.SUBSCRIPTION_METADATA_KEY, "string");
-  assert.ok(subscriptions.SUBSCRIPTION_METADATA_KEY.length > 0);
+  assert.match(subscriptions.SUBSCRIPTION_METADATA_KEY, /./s);
 });
 
 const NOW = Date.UTC(2027, 0, 1);
@@ -199,10 +203,14 @@ const VALID = {
 };
 
 it("accepts a request inside the contract", () => {
-  subscriptions.ValidateSubscriptionRequest(VALID, NOW);
-  subscriptions.ValidateSubscriptionRequest(
-    { ...VALID, intervalCount: 3, trialEnd: NOW + DAY_MS },
-    NOW,
+  assert.doesNotThrow(() =>
+    subscriptions.ValidateSubscriptionRequest(VALID, NOW),
+  );
+  assert.doesNotThrow(() =>
+    subscriptions.ValidateSubscriptionRequest(
+      { ...VALID, intervalCount: 3, trialEnd: NOW + DAY_MS },
+      NOW,
+    ),
   );
 });
 
