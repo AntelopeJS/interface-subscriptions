@@ -9,8 +9,11 @@ export type JsonValue =
   | JsonValue[]
   | JsonObject;
 
-/** A JSON object: string keys mapped to JSON values. */
-export type JsonObject = { [key: string]: JsonValue };
+/**
+ * A JSON object: string keys mapped to JSON values. A key whose value is
+ * `undefined` is allowed because serialization drops it.
+ */
+export type JsonObject = { [key: string]: JsonValue | undefined };
 
 /**
  * Every value {@link SubscriptionInterval} can take.
