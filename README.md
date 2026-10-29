@@ -171,7 +171,7 @@ too. `@antelopejs/core` 1.16.0 is a development test runner, not a runtime peer.
 - **A declined renewal is a status, not an exception.** Only a declined _first_
   period rejects, with `SubscriptionPaymentError`, and creates nothing.
 - **`past_due` is portable to report; the retry policy is not.**
-- **`vendorData` is a read-only echo.** No request accepts it.
+- **`vendorData` is a read-only echo of JSON values.** No request accepts it.
 - **An optional trailing `provider`** selects the payment account, as in the
   payment interface.
 

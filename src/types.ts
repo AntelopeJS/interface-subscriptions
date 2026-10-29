@@ -1,5 +1,17 @@
 import type { Amount } from "@antelopejs/interface-payment";
 
+/** Any value that survives JSON serialization. */
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | JsonObject;
+
+/** A JSON object: string keys mapped to JSON values. */
+export type JsonObject = { [key: string]: JsonValue };
+
 /**
  * Every value {@link SubscriptionInterval} can take.
  */
@@ -152,13 +164,15 @@ export interface Subscription {
   metadata?: Record<string, string>;
   /**
    * What the provider said about this subscription, verbatim, for logs and
-   * support tickets.
+   * support tickets. Every value is JSON-serializable: it is meant to be
+   * logged or stored, so a `Date`, `Buffer`, class instance or function has no
+   * place in it.
    *
    * Read-only. Nothing a caller does with this object reaches the provider, and
    * no request type accepts it: provider-specific behaviour belongs in the
    * provider's own interface, where the coupling is visible.
    */
-  vendorData?: Readonly<Record<string, unknown>>;
+  vendorData?: Readonly<JsonObject>;
 }
 
 /**
