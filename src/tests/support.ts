@@ -115,6 +115,10 @@ export function assertEpochMillis(
   );
 }
 
+function isBoolean(value: unknown): value is boolean {
+  return typeof value === "boolean";
+}
+
 /**
  * Asserts the invariants every subscription holds, whatever its state.
  */
@@ -132,7 +136,10 @@ export function assertSubscriptionShape(
   assert.equal(subscription.interval, request.interval);
   assert.equal(subscription.intervalCount, request.intervalCount ?? 1);
   assert.deepEqual(subscription.amount, request.amount);
-  assert.equal(typeof subscription.cancelAtPeriodEnd, "boolean");
+  assert.ok(
+    isBoolean(subscription.cancelAtPeriodEnd),
+    "cancelAtPeriodEnd must be a boolean",
+  );
   assertEpochMillis(subscription.createdAt, "createdAt");
   assertEpochMillis(subscription.currentPeriodStart, "currentPeriodStart");
   assertEpochMillis(
