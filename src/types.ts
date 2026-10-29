@@ -1,6 +1,30 @@
 import type { Amount } from "@antelopejs/interface-payment";
 
 /**
+ * A value JSON can represent: a string, number, boolean, `null`, an array of
+ * JSON values, or a {@link JsonObject}. `Date`, `Buffer`, functions and class
+ * instances are not JSON values; convert them first (for example
+ * `date.toISOString()`). A read-only array is not assignable either; spread it
+ * into a mutable one. The type cannot exclude `NaN` and `Infinity`, which
+ * `JSON.stringify` writes as `null`.
+ */
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | JsonObject;
+
+/**
+ * String keys mapped to JSON values. A key whose value is `undefined` is
+ * accepted so an optional field can be passed as is; `JSON.stringify` drops
+ * it. An object typed as an `interface` is not assignable (it has no index
+ * signature); declare it with a `type` alias or spread it into a literal.
+ */
+export type JsonObject = { [key: string]: JsonValue | undefined };
+
+/**
  * Every value {@link SubscriptionInterval} can take.
  */
 export const SUBSCRIPTION_INTERVALS = Object.freeze([
@@ -152,13 +176,15 @@ export interface Subscription {
   metadata?: Record<string, string>;
   /**
    * What the provider said about this subscription, verbatim, for logs and
-   * support tickets.
+   * support tickets. Every value is JSON-serializable: it is meant to be
+   * logged or stored, so a `Date`, `Buffer`, class instance or function has no
+   * place in it.
    *
    * Read-only. Nothing a caller does with this object reaches the provider, and
    * no request type accepts it: provider-specific behaviour belongs in the
    * provider's own interface, where the coupling is visible.
    */
-  vendorData?: Readonly<Record<string, unknown>>;
+  vendorData?: Readonly<JsonObject>;
 }
 
 /**

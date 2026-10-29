@@ -22,7 +22,7 @@ import {
   TEST_METHOD_DECLINES_LATER,
   TRIAL_DAYS,
   inWholeSeconds,
-  assertSubscriptionShape,
+  assertSubscriptionContract,
   key,
   monthly,
   newPayer,
@@ -148,7 +148,7 @@ describe(`reading subscriptions back (${CHARGEABLE})`, function () {
     assert.equal(read.currentPeriodStart, created.currentPeriodStart);
     assert.equal(read.currentPeriodEnd, created.currentPeriodEnd);
     assert.equal(read.latestPayment, created.latestPayment);
-    assertSubscriptionShape(
+    assertSubscriptionContract(
       read,
       monthly(payer, { reference: created.reference }),
     );

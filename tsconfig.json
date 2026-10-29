@@ -10,8 +10,7 @@
     "emitDecoratorMetadata": true,
     "declaration": true,
     "sourceMap": true,
-    "outDir": "dist",
-    "rootDir": "src"
+    "outDir": "dist"
   },
-  "include": ["src"]
+  "include": ["src", "tests"]
 }

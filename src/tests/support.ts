@@ -122,7 +122,7 @@ function isBoolean(value: unknown): value is boolean {
 /**
  * Asserts the invariants every subscription holds, whatever its state.
  */
-export function assertSubscriptionShape(
+export function assertSubscriptionContract(
   subscription: Subscription,
   request: SubscriptionRequest,
 ): void {
@@ -255,7 +255,7 @@ export async function subscribe(
 ): Promise<Subscription> {
   const request = monthly(payer, overrides);
   const subscription = await CreateSubscription(request, key());
-  assertSubscriptionShape(subscription, request);
+  assertSubscriptionContract(subscription, request);
   return subscription;
 }
 
