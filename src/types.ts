@@ -1,6 +1,13 @@
 import type { Amount } from "@antelopejs/interface-payment";
 
-/** Any value that survives JSON serialization. */
+/**
+ * A value JSON can represent: a string, number, boolean, `null`, an array of
+ * JSON values, or a {@link JsonObject}. `Date`, `Buffer`, functions and class
+ * instances are not JSON values; convert them first (for example
+ * `date.toISOString()`). A read-only array is not assignable either; spread it
+ * into a mutable one. The type cannot exclude `NaN` and `Infinity`, which
+ * `JSON.stringify` writes as `null`.
+ */
 export type JsonValue =
   | string
   | number
@@ -10,8 +17,10 @@ export type JsonValue =
   | JsonObject;
 
 /**
- * A JSON object: string keys mapped to JSON values. A key whose value is
- * `undefined` is allowed because serialization drops it.
+ * String keys mapped to JSON values. A key whose value is `undefined` is
+ * accepted so an optional field can be passed as is; `JSON.stringify` drops
+ * it. An object typed as an `interface` is not assignable (it has no index
+ * signature); declare it with a `type` alias or spread it into a literal.
  */
 export type JsonObject = { [key: string]: JsonValue | undefined };
 

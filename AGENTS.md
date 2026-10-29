@@ -9,6 +9,7 @@ The AntelopeJS interface for recurring billing of a saved payment method, publis
 ## Tests
 
 - `pnpm test` builds `dist`, then runs `ajs module test .`. `src/antelope.test.ts` (`antelopeJs.test` in `package.json`) points it at `test/`, so it runs `test/contract.test.js` against the compiled `dist/index.js`. It needs no credentials.
+- `tests/json-object.types.ts` is a compile-time test of what `JsonObject` accepts and rejects. `tsconfig.json` (typecheck) includes `tests`; `tsconfig.build.json` (the `build` script) emits only `src`.
 - `src/tests/` is the provider conformance suite. It ships as `dist/tests` and `ajs module test` runs it in a module that lists this interface in `antelopeJs.implements`. `pnpm run checks` does not run it here; run it from an implementing module with the `ANTELOPE_PAYMENT_TEST_*` and `ANTELOPE_SUBSCRIPTIONS_TEST_*` variables listed in `README.md`. When the contract changes, update the suite, `docs/4.implementing.md` and `skills/managing-subscriptions/SKILL.md`.
 - `pnpm run checks` does not run the documentation check. CI runs it through the `docs-files` inputs in `.github/workflows/ci.yml`. To run it locally, clone `AntelopeJS/tooling-configs` at `v0.0.9` (the ref ci-node pins), run `npm ci --prefix actions/docs --omit=dev`, then run `node <clone>/actions/docs/check.mjs --files "$(printf 'README.md\ndocs')" --typescript-project docs/tsconfig.json` from this repository.
 
