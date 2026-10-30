@@ -217,28 +217,41 @@ describe(`requests outside the contract (${CHARGEABLE})`, function () {
   });
 
   const INVALID = {
-    "a zero amount": () => ({ amount: amount(0) }),
-    "a fractional amount": () => ({ amount: amount(10.5) }),
-    "an interval count of zero": () => ({ intervalCount: 0 }),
-    "a fractional interval count": () => ({ intervalCount: 1.5 }),
-    "an interval outside the vocabulary": () => ({
-      interval: "fortnight" as SubscriptionRequest["interval"],
+    "a zero amount": (request) => ({ ...request, amount: amount(0) }),
+    "a fractional amount": (request) => ({ ...request, amount: amount(10.5) }),
+    "an interval count of zero": (request) => ({
+      ...request,
+      intervalCount: 0,
     }),
-    "a trial that has already ended": (now) => ({ trialEnd: now - DAY_MS }),
-    "a billing anchor in the past": (now) => ({
+    "a fractional interval count": (request) => ({
+      ...request,
+      intervalCount: 1.5,
+    }),
+    "an interval outside the vocabulary": (request) =>
+      Object.assign(request, { interval: "fortnight" }),
+    "a trial that has already ended": (request, now) => ({
+      ...request,
+      trialEnd: now - DAY_MS,
+    }),
+    "a billing anchor in the past": (request, now) => ({
+      ...request,
       billingAnchor: now - DAY_MS,
     }),
-    "both a trial and a billing anchor": (now) => ({
+    "both a trial and a billing anchor": (request, now) => ({
+      ...request,
       trialEnd: now + DAY_MS,
       billingAnchor: now + 2 * DAY_MS,
     }),
-  } satisfies Record<string, (now: number) => Partial<SubscriptionRequest>>;
+  } satisfies Record<
+    string,
+    (request: SubscriptionRequest, now: number) => SubscriptionRequest
+  >;
 
-  for (const [label, overrides] of Object.entries(INVALID)) {
+  for (const [label, invalidate] of Object.entries(INVALID)) {
     it(`refuses ${label}`, async () => {
       const payer = await newPayer();
       await assert.rejects(
-        CreateSubscription(monthly(payer, overrides(Date.now())), key()),
+        CreateSubscription(invalidate(monthly(payer), Date.now()), key()),
         InvalidSubscriptionRequestError,
         label,
       );
