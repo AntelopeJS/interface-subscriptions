@@ -151,12 +151,14 @@ events by `event.id` as described in [Events](./docs/3.events.md).
 
 ## Compatibility
 
-<!-- docs-compat: ./package.json#peerDependencies -->
+<!-- antelopejs-docs-compat:start -->
 
-| Package                         | Range            |
-| ------------------------------- | ---------------- |
-| `@antelopejs/interface-core`    | `>=0.0.5 <1.0.0` |
-| `@antelopejs/interface-payment` | `>=0.0.2 <1.0.0` |
+| Package                         | Supported        | Tested with |
+| ------------------------------- | ---------------- | ----------- |
+| `@antelopejs/interface-core`    | `>=0.0.5 <1.0.0` | `0.1.1`     |
+| `@antelopejs/interface-payment` | `>=0.0.2 <1.0.0` | `0.0.2`     |
+
+<!-- antelopejs-docs-compat:end -->
 
 These are the peer requirements in `package.json`. Development uses the same
 payment-interface semver range. Check your implementing module's requirements
