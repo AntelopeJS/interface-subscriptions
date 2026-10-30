@@ -1,8 +1,7 @@
 const assert = require("node:assert/strict");
 const { RegisteringProxy } = require("@antelopejs/interface-core");
 
-/** @type {typeof import("../src/index")} */
-const subscriptions = require("../dist/index.js");
+const subscriptions = require("#built");
 
 /**
  * This package is a contract: the calls are `InterfaceFunction` declarations
