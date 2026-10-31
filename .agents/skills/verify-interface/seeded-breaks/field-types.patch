@@ -1,0 +1,13 @@
+diff --git a/src/types.ts b/src/types.ts
+index 60d7ab8..9e3b2ec 100644
+--- a/src/types.ts
++++ b/src/types.ts
+@@ -158,7 +158,7 @@ export interface Subscription {
+    */
+   currentPeriodEnd: number;
+   /** Unix epoch milliseconds. Present when the subscription began with a trial. */
+-  trialEnd?: number;
++  trialEnd: number;
+   /** The subscription ends at `currentPeriodEnd` instead of renewing. */
+   cancelAtPeriodEnd: boolean;
+   /** Unix epoch milliseconds. Present exactly when `status` is `canceled`. */

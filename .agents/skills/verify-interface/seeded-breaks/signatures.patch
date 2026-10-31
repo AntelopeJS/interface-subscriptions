@@ -1,0 +1,14 @@
+diff --git a/src/functions.ts b/src/functions.ts
+index 3e3ee49..1947682 100644
+--- a/src/functions.ts
++++ b/src/functions.ts
+@@ -88,8 +88,8 @@ export const CancelSubscription =
+   InterfaceFunction<
+     (
+       id: string,
+-      idempotencyKey: string,
+       timing: CancellationTiming,
++      idempotencyKey: string,
+       provider?: string,
+     ) => Promise<Subscription>
+   >();

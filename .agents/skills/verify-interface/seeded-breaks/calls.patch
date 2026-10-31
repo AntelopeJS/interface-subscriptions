@@ -1,0 +1,13 @@
+diff --git a/src/functions.ts b/src/functions.ts
+index 3e3ee49..88c353a 100644
+--- a/src/functions.ts
++++ b/src/functions.ts
+@@ -111,7 +111,7 @@ export const CancelSubscription =
+  * @throws SubscriptionNotFoundError if no subscription has that identifier
+  * @throws InvalidSubscriptionStateError if the subscription has ended
+  */
+-export const UpdateSubscriptionPaymentMethod =
++export const UpdateSubscriptionMethod =
+   InterfaceFunction<
+     (
+       id: string,

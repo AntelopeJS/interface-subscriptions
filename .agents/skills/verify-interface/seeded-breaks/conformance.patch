@@ -1,0 +1,13 @@
+diff --git a/src/tests/support.ts b/src/tests/support.ts
+index b97fbaa..75cd4f1 100644
+--- a/src/tests/support.ts
++++ b/src/tests/support.ts
+@@ -73,7 +73,7 @@ export const EVENTS_OBSERVABLE = Boolean(
+   process.env.ANTELOPE_SUBSCRIPTIONS_TEST_EVENTS,
+ );
+ 
+-const CURRENCY = process.env.ANTELOPE_PAYMENT_TEST_CURRENCY || "EUR";
++const CURRENCY = process.env.ANTELOPE_PAYMENT_TEST_CURRENCY || "USD";
+ 
+ export const CHARGEABLE = "requires ANTELOPE_PAYMENT_TEST_METHOD";
+ export const DECLINES_LATER =

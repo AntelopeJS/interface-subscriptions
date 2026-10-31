@@ -1,0 +1,13 @@
+diff --git a/src/errors.ts b/src/errors.ts
+index c168617..ef13628 100644
+--- a/src/errors.ts
++++ b/src/errors.ts
+@@ -27,7 +27,7 @@ export class SubscriptionError extends Error {
+  */
+ export class SubscriptionNotFoundError extends SubscriptionError {
+   constructor(id: string, providerCode?: string) {
+-    super(`No such subscription: ${id}`, providerCode);
++    super(`Subscription not found: ${id}`, providerCode);
+     this.name = "SubscriptionNotFoundError";
+   }
+ }

@@ -1,0 +1,13 @@
+diff --git a/src/types.ts b/src/types.ts
+index 60d7ab8..1ed43c2 100644
+--- a/src/types.ts
++++ b/src/types.ts
+@@ -50,7 +50,7 @@ export type SubscriptionInterval = (typeof SUBSCRIPTION_INTERVALS)[number];
+  * Providers cap the period differently. A request for a longer one may be
+  * refused with {@link InvalidSubscriptionRequestError}.
+  */
+-export const MAX_PORTABLE_PERIOD_DAYS = 366;
++export const MAX_PORTABLE_PERIOD_DAYS = 31;
+ 
+ /**
+  * Every value {@link SubscriptionStatus} can take, in lifecycle order.

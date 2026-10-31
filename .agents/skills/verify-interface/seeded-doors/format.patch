@@ -1,0 +1,13 @@
+diff --git a/src/types.ts b/src/types.ts
+index 60d7ab8..6ee494c 100644
+--- a/src/types.ts
++++ b/src/types.ts
+@@ -58,7 +58,7 @@ export const MAX_PORTABLE_PERIOD_DAYS = 366;
+ export const SUBSCRIPTION_STATUSES = Object.freeze([
+   "trialing",
+   "active",
+-  "past_due",
++  "pastdue",
+   "canceled",
+ ] as const);
+ 

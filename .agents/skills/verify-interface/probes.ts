@@ -1,0 +1,52 @@
+export const SIGNATURES = `
+type Req = Api.SubscriptionRequest;
+type Sub = Api.Subscription;
+type _Create = Assert<Same<Parameters<typeof Api.CreateSubscription>, [request: Req, idempotencyKey: string, provider?: string]>>;
+type _CreateOut = Assert<Same<ReturnType<typeof Api.CreateSubscription>, Promise<Sub>>>;
+type _Get = Assert<Same<Parameters<typeof Api.GetSubscription>, [id: string, provider?: string]>>;
+type _GetOut = Assert<Same<ReturnType<typeof Api.GetSubscription>, Promise<Sub>>>;
+type _List = Assert<Same<Parameters<typeof Api.ListSubscriptions>, [customer: string, provider?: string]>>;
+type _ListOut = Assert<Same<ReturnType<typeof Api.ListSubscriptions>, Promise<Sub[]>>>;
+type _Cancel = Assert<Same<Parameters<typeof Api.CancelSubscription>, [id: string, idempotencyKey: string, timing: Api.CancellationTiming, provider?: string]>>;
+type _CancelOut = Assert<Same<ReturnType<typeof Api.CancelSubscription>, Promise<Sub>>>;
+type _Update = Assert<Same<Parameters<typeof Api.UpdateSubscriptionPaymentMethod>, [id: string, paymentMethod: string, idempotencyKey: string, provider?: string]>>;
+type _UpdateOut = Assert<Same<ReturnType<typeof Api.UpdateSubscriptionPaymentMethod>, Promise<Sub>>>;
+type _Validate = Assert<Same<typeof Api.ValidateSubscriptionRequest, (request: Req, now?: number) => void>>;
+type _Terminal = Assert<Same<typeof Api.isTerminalSubscriptionStatus, (status: Api.SubscriptionStatus) => boolean>>;
+type Handler = Parameters<typeof Api.SubscriptionEvents.register>[1];
+type _Handler = Assert<Same<Handler, Api.SubscriptionEventHandler>>;
+type _HandlerOut = Assert<Same<ReturnType<Api.SubscriptionEventHandler>, void | Promise<void>>>;
+type _HandlerIn = Assert<Same<Parameters<Api.SubscriptionEventHandler>, [event: Api.SubscriptionEvent]>>;
+`;
+
+export const FIELD_TYPES = `
+type Sub = Api.Subscription;
+type Req = Api.SubscriptionRequest;
+type Required_<T, K extends keyof T> = Pick<T, K> extends Required<Pick<T, K>> ? true : false;
+type _Required = Assert<Required_<Sub, "id" | "reference" | "customer" | "paymentMethod" | "amount" | "interval" | "intervalCount" | "status" | "currentPeriodStart" | "currentPeriodEnd" | "cancelAtPeriodEnd" | "createdAt">>;
+type _OptionalTrial = Assert<Not<Required_<Sub, "trialEnd">>>;
+type _OptionalEnded = Assert<Not<Required_<Sub, "endedAt">>>;
+type _OptionalReason = Assert<Not<Required_<Sub, "endReason">>>;
+type _OptionalPayment = Assert<Not<Required_<Sub, "latestPayment">>>;
+type _OptionalMetadata = Assert<Not<Required_<Sub, "metadata">>>;
+type _OptionalVendor = Assert<Not<Required_<Sub, "vendorData">>>;
+type _Status = Assert<Same<Sub["status"], "trialing" | "active" | "past_due" | "canceled">>;
+type _Interval = Assert<Same<Sub["interval"], "day" | "week" | "month" | "year">>;
+type _Reason = Assert<Same<NonNullable<Sub["endReason"]>, "requested" | "payment_failed">>;
+type _Times = Assert<Same<[Sub["currentPeriodStart"], Sub["currentPeriodEnd"], Sub["createdAt"]], [number, number, number]>>;
+type _Timing = Assert<Same<Api.CancellationTiming, "now" | "period_end">>;
+type _RequestRequired = Assert<Required_<Req, "reference" | "customer" | "paymentMethod" | "amount" | "interval">>;
+type _RequestOptional = Assert<Same<[Required_<Req, "intervalCount">, Required_<Req, "trialEnd">, Required_<Req, "billingAnchor">, Required_<Req, "description">, Required_<Req, "metadata">], [false, false, false, false, false]>>;
+type _NoVendorInRequest = Assert<Not<"vendorData" extends keyof Req ? true : false>>;
+type _VendorReadonly = Assert<Not<Accepts<{ -readonly [K in keyof NonNullable<Sub["vendorData"]>]: NonNullable<Sub["vendorData"]>[K] }, NonNullable<Sub["vendorData"]>> extends true ? false : true>>;
+type _Event = Assert<Same<Api.SubscriptionEvent["type"], "subscription.created" | "subscription.payment_succeeded" | "subscription.payment_failed" | "subscription.canceled">>;
+type _EventPayment = Assert<Not<Required_<Api.SubscriptionEvent, "payment">>>;
+type _EventSubscription = Assert<Same<Api.SubscriptionEvent["subscription"], Sub>>;
+type _Json = Assert<Accepts<Api.JsonObject, { name: string; count: number; ok: boolean; none: null; list: string[]; nested: { deep: number }; absent: undefined }>>;
+type _NoDate = Assert<Not<Accepts<Api.JsonObject, { when: Date }>>>;
+type _NoBuffer = Assert<Not<Accepts<Api.JsonObject, { data: Buffer }>>>;
+type _NoFunction = Assert<Not<Accepts<Api.JsonObject, { run: () => void }>>>;
+type _NoReadonlyArray = Assert<Not<Accepts<Api.JsonObject, { list: readonly string[] }>>>;
+interface Declared { name: string }
+type _NoInterface = Assert<Not<Accepts<Api.JsonObject, Declared>>>;
+`;
