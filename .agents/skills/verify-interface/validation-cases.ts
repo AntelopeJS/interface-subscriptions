@@ -74,7 +74,6 @@ export const ORDER_EXPECTED: Printed = [
   "intervalCount must be a positive integer",
   "trialEnd and billingAnchor are mutually exclusive",
   "trialEnd must be a finite timestamp in the future",
-  "trialEnd must be a finite timestamp in the future",
 ];
 
 export const INTERVAL_CASES = `

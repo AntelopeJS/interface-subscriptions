@@ -7,6 +7,12 @@ import { ERROR_EXPECTED, ERROR_SCRIPT, STATUS_EXPECTED, STATUS_SCRIPT, VOCABULAR
 import { FIELD_TYPES, SIGNATURES } from "./probes.ts";
 import { CONFORMANCE_FILES, CONFORMANCE_SCRIPT } from "./suite-scripts.ts";
 
+const EUR_19 = { value: 1900, currency: "EUR" };
+
+function errorFacts(error: SubscriptionsInterface.SubscriptionError, api: typeof SubscriptionsInterface): [string, string, string | null, boolean] {
+  return [error.name, error.message, error.providerCode ?? null, error instanceof api.SubscriptionError];
+}
+
 const CALLS: NonNullable<InterfaceHooks<typeof SubscriptionsInterface>["calls"]> = {
   ".:ValidateSubscriptionRequest": {
     async call(api) {
@@ -24,6 +30,37 @@ const CALLS: NonNullable<InterfaceHooks<typeof SubscriptionsInterface>["calls"]>
       }
     },
     expect: "InvalidSubscriptionRequestError",
+  },
+  ".:SubscriptionError": {
+    call: (api) => Promise.resolve(errorFacts(new api.SubscriptionError("could not call", "network"), api)),
+    expect: ["SubscriptionError", "could not call", "network", true],
+  },
+  ".:SubscriptionNotFoundError": {
+    call: (api) => Promise.resolve(errorFacts(new api.SubscriptionNotFoundError("sub_1", "missing"), api)),
+    expect: ["SubscriptionNotFoundError", "No such subscription: sub_1", "missing", true],
+  },
+  ".:InvalidSubscriptionRequestError": {
+    call: (api) => Promise.resolve(errorFacts(new api.InvalidSubscriptionRequestError("bad amount", "invalid"), api)),
+    expect: ["InvalidSubscriptionRequestError", "bad amount", "invalid", true],
+  },
+  ".:InvalidSubscriptionStateError": {
+    call: (api) => Promise.resolve(errorFacts(new api.InvalidSubscriptionStateError("ended", "canceled", "state"), api)),
+    expect: ["InvalidSubscriptionStateError", "ended", "state", true],
+  },
+  ".:SubscriptionPaymentError": {
+    call: (api) =>
+      Promise.resolve(
+        errorFacts(new api.SubscriptionPaymentError({
+            id: "pay_1",
+            status: "failed",
+            amount: EUR_19,
+            amountCaptured: { value: 0, currency: "EUR" },
+            amountRefunded: { value: 0, currency: "EUR" },
+            reference: "acct_1",
+            createdAt: 0,
+          }, "declined"), api),
+      ),
+    expect: ["SubscriptionPaymentError", "The first period could not be charged: payment pay_1 is failed", "declined", true],
   },
   ".:isTerminalSubscriptionStatus": {
     call: (api) => Promise.resolve([api.isTerminalSubscriptionStatus("canceled"), api.isTerminalSubscriptionStatus("past_due")]),

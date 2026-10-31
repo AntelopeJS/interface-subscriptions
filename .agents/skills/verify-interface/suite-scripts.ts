@@ -1,4 +1,5 @@
 export const CONFORMANCE_SCRIPT = `
+globalThis.after = () => undefined;
 const own = (name) => require(require.resolve(name, { paths: [process.cwd()] }));
 const support = own("@antelopejs/interface-subscriptions/tests/support");
 const seconds = (() => { try { support.assertEpochMillis(Math.floor(Date.now() / 1000), "when"); return "accepted"; } catch (error) { return error.name; } })();

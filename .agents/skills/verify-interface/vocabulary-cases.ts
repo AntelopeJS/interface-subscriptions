@@ -66,9 +66,9 @@ const state = new c.InvalidSubscriptionStateError("already ended", "canceled", "
 const stateBare = new c.InvalidSubscriptionStateError("already ended");
 const payment = new c.SubscriptionPaymentError(declined, "card_declined");
 const paymentBare = new c.SubscriptionPaymentError({ ...declined, status: "canceled" });
-const base = new c.SubscriptionError("could not call", "network");
+const root = new c.SubscriptionError("could not call", "network");
 console.log(JSON.stringify({
-  base: describe(base),
+  base: describe(root),
   missing: describe(missing),
   missingBare: new c.SubscriptionNotFoundError("sub_2").providerCode ?? null,
   invalid: describe(invalid),
