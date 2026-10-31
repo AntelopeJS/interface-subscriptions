@@ -139,14 +139,19 @@ off-session before `CreateSubscription` resolves. Adapt those amounts to your
 billing policy. Register an idempotent handler for subsequent lifecycle events:
 
 ```ts
-import { SubscriptionEvents } from "@antelopejs/interface-subscriptions";
+import {
+  SubscriptionEvents,
+  type Subscription,
+} from "@antelopejs/interface-subscriptions";
+
+declare function grantOrRevokeAccess(subscription: Subscription): Promise<void>;
 
 SubscriptionEvents.register("billing", async (event) => {
   await grantOrRevokeAccess(event.subscription);
 });
 ```
 
-`grantOrRevokeAccess` stands for your application's access policy. Deduplicate
+`grantOrRevokeAccess` stands for your application's access policy, and its `declare` line only gives it a type. Deduplicate
 events by `event.id` as described in [Events](./docs/3.events.md).
 
 ## Compatibility
@@ -162,7 +167,7 @@ events by `event.id` as described in [Events](./docs/3.events.md).
 
 These are the peer requirements in `package.json`. Development uses the same
 payment-interface semver range. Check your implementing module's requirements
-too. `@antelopejs/core` 1.16.0 is a development test runner, not a runtime peer.
+too. `@antelopejs/core` is a development test runner, not a runtime peer.
 
 ## Conventions
 
