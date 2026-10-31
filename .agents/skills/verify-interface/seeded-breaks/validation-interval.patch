@@ -1,0 +1,13 @@
+diff --git a/src/validation.ts b/src/validation.ts
+index 6ac7fb3..5c014fa 100644
+--- a/src/validation.ts
++++ b/src/validation.ts
+@@ -34,7 +34,7 @@ const RULES: Rule[] = [
+       : `interval must be one of ${SUBSCRIPTION_INTERVALS.join(", ")}`,
+   (request) =>
+     request.intervalCount === undefined ||
+-    positiveInteger(request.intervalCount)
++    request.intervalCount > 0
+       ? undefined
+       : "intervalCount must be a positive integer",
+   (request) =>

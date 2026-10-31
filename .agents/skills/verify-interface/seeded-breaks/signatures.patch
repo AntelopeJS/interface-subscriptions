@@ -1,0 +1,13 @@
+diff --git a/src/functions.ts b/src/functions.ts
+index 3e3ee49..cab8dff 100644
+--- a/src/functions.ts
++++ b/src/functions.ts
+@@ -66,7 +66,7 @@ export const GetSubscription =
+  */
+ export const ListSubscriptions =
+   InterfaceFunction<
+-    (customer: string, provider?: string) => Promise<Subscription[]>
++    (customer: string, provider?: string) => Promise<readonly Subscription[]>
+   >();
+ 
+ /**
