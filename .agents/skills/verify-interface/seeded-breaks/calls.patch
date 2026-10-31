@@ -1,13 +1,33 @@
 diff --git a/src/functions.ts b/src/functions.ts
-index 3e3ee49..88c353a 100644
+index 3e3ee49..907c48d 100644
 --- a/src/functions.ts
 +++ b/src/functions.ts
-@@ -111,7 +111,7 @@ export const CancelSubscription =
+@@ -84,15 +84,19 @@ export const ListSubscriptions =
   * @throws SubscriptionNotFoundError if no subscription has that identifier
-  * @throws InvalidSubscriptionStateError if the subscription has ended
+  * @throws InvalidSubscriptionStateError if the subscription has already ended
   */
--export const UpdateSubscriptionPaymentMethod =
-+export const UpdateSubscriptionMethod =
-   InterfaceFunction<
-     (
-       id: string,
+-export const CancelSubscription =
+-  InterfaceFunction<
+-    (
+-      id: string,
+-      idempotencyKey: string,
+-      timing: CancellationTiming,
+-      provider?: string,
+-    ) => Promise<Subscription>
+-  >();
++const Cancel = InterfaceFunction<
++  (
++    id: string,
++    idempotencyKey: string,
++    timing: CancellationTiming,
++    provider?: string,
++  ) => Promise<Subscription>
++>();
++export const CancelSubscription = ((
++  id: string,
++  idempotencyKey: string,
++  timing: CancellationTiming,
++) => Cancel(id, idempotencyKey, timing)) as typeof Cancel;
+ 
+ /**
+  * Charges a different saved method from the next attempt onwards.
