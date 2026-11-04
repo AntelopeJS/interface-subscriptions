@@ -12,6 +12,8 @@ Bill a saved payment method every period, with trials, a billing anchor,
 cancellation now or at period end, and `past_due` reporting. Your code names no
 provider, and no consumer has to build a billing cycle of its own.
 
+Part of [AntelopeJS](https://github.com/AntelopeJS/antelopejs), the TypeScript framework where modules depend on contracts and the application chooses the provider. Built by the team behind [AntelopeJS DMS](https://github.com/AntelopeJS/dms).
+
 ## Installation
 
 ```bash
