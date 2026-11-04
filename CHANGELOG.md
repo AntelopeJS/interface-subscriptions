@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.1.1
+
+[compare changes](https://github.com/AntelopeJS/interface-subscriptions/compare/v0.1.0...v0.1.1)
+
+### 📖 Documentation
+
+- **readme:** Use one Discord invite ([#15](https://github.com/AntelopeJS/interface-subscriptions/pull/15))
+- **github:** Send questions and ideas to Discord ([#17](https://github.com/AntelopeJS/interface-subscriptions/pull/17))
+
+### 🏡 Chore
+
+- Land the cleanup campaign on main ([#20](https://github.com/AntelopeJS/interface-subscriptions/pull/20))
+- Land the cleanup campaign on main ([#21](https://github.com/AntelopeJS/interface-subscriptions/pull/21))
+
+### ❤️ Contributors
+
+- Antony Rizzitelli ([@Upd4ting](http://github.com/Upd4ting))
+
 ## v0.1.0
 
 [compare changes](https://github.com/AntelopeJS/interface-subscriptions/compare/v0.0.2...v0.1.0)
