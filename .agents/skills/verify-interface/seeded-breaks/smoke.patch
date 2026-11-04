@@ -1,0 +1,18 @@
+diff --git a/src/functions.ts b/src/functions.ts
+index 3e3ee49..8628767 100644
+--- a/src/functions.ts
++++ b/src/functions.ts
+@@ -54,8 +54,11 @@ export const CreateSubscription =
+  * @returns The subscription
+  * @throws SubscriptionNotFoundError if no subscription has that identifier
+  */
+-export const GetSubscription =
+-  InterfaceFunction<(id: string, provider?: string) => Promise<Subscription>>();
++export const GetSubscription = (
++  id: string,
++  provider?: string,
++): Promise<Subscription> =>
++  Promise.reject(new Error(`No provider for ${id} ${provider}`));
+ 
+ /**
+  * Lists a customer's subscriptions, ended ones included.

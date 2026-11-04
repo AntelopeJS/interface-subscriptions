@@ -1,0 +1,13 @@
+diff --git a/src/validation.ts b/src/validation.ts
+index 6ac7fb3..3f34eff 100644
+--- a/src/validation.ts
++++ b/src/validation.ts
+@@ -10,7 +10,7 @@ function positiveInteger(value: number | undefined): boolean {
+ function validTime(value: number | undefined, now?: number): boolean {
+   return (
+     value === undefined ||
+-    (Number.isFinite(value) && (now === undefined || value > now))
++    (Number.isFinite(value) && (now === undefined || value >= now))
+   );
+ }
+ 

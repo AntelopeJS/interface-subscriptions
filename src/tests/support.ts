@@ -270,7 +270,7 @@ export async function rejectsWith(
 ): Promise<Error> {
   const error: unknown = await work.then(
     () => undefined,
-    (reason) => reason,
+    (reason: unknown) => reason,
   );
   assert.ok(
     error instanceof expected,

@@ -1,0 +1,13 @@
+diff --git a/src/types.ts b/src/types.ts
+index 60d7ab8..79fc22b 100644
+--- a/src/types.ts
++++ b/src/types.ts
+@@ -88,7 +88,7 @@ export type SubscriptionStatus = (typeof SUBSCRIPTION_STATUSES)[number];
+ export function isTerminalSubscriptionStatus(
+   status: SubscriptionStatus,
+ ): boolean {
+-  return status === "canceled";
++  return status === "canceled" || status === "past_due";
+ }
+ 
+ /**

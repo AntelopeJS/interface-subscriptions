@@ -1,0 +1,15 @@
+diff --git a/src/validation.ts b/src/validation.ts
+index 6ac7fb3..012a3b4 100644
+--- a/src/validation.ts
++++ b/src/validation.ts
+@@ -15,9 +15,9 @@ function validTime(value: number | undefined, now?: number): boolean {
+ }
+ 
+ const RULES: Rule[] = [
++  (request) => (request.customer ? undefined : "customer is required"),
+   (request) =>
+     request.reference ? undefined : "reference must be a non-empty string",
+-  (request) => (request.customer ? undefined : "customer is required"),
+   (request) =>
+     request.paymentMethod ? undefined : "paymentMethod is required",
+   (request) =>
