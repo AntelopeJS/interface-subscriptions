@@ -10,7 +10,7 @@ journeys:
 
 # Statuses
 
-The four normalised statuses and why a subscription ended; only `canceled` is terminal. This journey contains the Format door of `src/types.ts`.
+The four normalised statuses and why a subscription ended; only `canceled` is terminal.
 
 ## Sub-features
 
