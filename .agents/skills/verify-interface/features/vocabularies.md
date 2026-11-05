@@ -10,7 +10,7 @@ journeys:
 
 # Vocabularies
 
-The other strings consumers branch on and providers store: intervals, cancellation timings, event types, the metadata key marking subscription charges, and the one-year period cap. This journey contains the Format door of `src/types.ts`.
+The other strings consumers branch on and providers store: intervals, cancellation timings, event types, the metadata key marking subscription charges, and the one-year period cap.
 
 ## Sub-features
 
