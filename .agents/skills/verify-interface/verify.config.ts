@@ -74,13 +74,11 @@ const config: VerifyConfig<typeof SubscriptionsInterface> = {
     format: {
       globs: ["src/types.ts"],
       funnels: [],
-      containments: ["statuses/status-vocabulary", "vocabularies/wire-names"],
       why: "the status, end reason, interval, timing and event strings and the antelopeSubscription metadata key are what providers store in their subscription rows and payment metadata, and what consumers branch on",
     },
     contract: {
       globs: ["src/index.ts", "src/functions.ts", "package.json"],
       funnels: [],
-      containments: [],
       why: "the five calls, the event proxy, the validator, the error classes and the vocabularies are what every billing module and provider imports",
     },
     outbound: null,
@@ -88,7 +86,6 @@ const config: VerifyConfig<typeof SubscriptionsInterface> = {
     publish: {
       globs: ["package.json", ".release-it.json", "changelogen.config.json", ".github/workflows/release.yml"],
       funnels: [],
-      containments: [],
       why: "the package name and release workflow claim @antelopejs/interface-subscriptions on npm",
     },
   },
