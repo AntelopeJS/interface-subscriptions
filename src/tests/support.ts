@@ -22,6 +22,7 @@ import {
 export const SUITE_TIMEOUT = 60_000;
 const SETTLE_TIMEOUT = 30_000;
 const SETTLE_INTERVAL = 500;
+const SETTLE_FIRST_POLL = 50;
 export const PERIOD_VALUE = 1900;
 export const RETURN_URL = "https://merchant.invalid/return/subscription";
 export const DAY_MS = 24 * 60 * 60 * 1000;
@@ -167,13 +168,24 @@ export function assertSubscriptionContract(
 /**
  * Polls until the payment leaves `pending`, the only status an off-session
  * charge can sit in.
+ *
+ * Most payments settle within milliseconds, so the reads come 50, 150 and
+ * 350 ms after the first one, then on every whole 500 ms. A payment is never
+ * seen later than a fixed 500 ms poll would have seen it.
  */
 export async function settledPayment(id: string): Promise<Payment> {
-  const deadline = Date.now() + SETTLE_TIMEOUT;
+  const start = Date.now();
+  const deadline = start + SETTLE_TIMEOUT;
+  let step = SETTLE_FIRST_POLL;
+  let pollAt = step;
   let payment = await GetPayment(id);
   while (!isTerminalPaymentStatus(payment.status) && Date.now() < deadline) {
-    await delay(SETTLE_INTERVAL);
+    await delay(Math.max(0, start + pollAt - Date.now()));
     payment = await GetPayment(id);
+    step *= 2;
+    const nextInterval =
+      (Math.floor(pollAt / SETTLE_INTERVAL) + 1) * SETTLE_INTERVAL;
+    pollAt = Math.min(pollAt + step, nextInterval);
   }
   return payment;
 }
