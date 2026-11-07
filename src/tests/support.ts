@@ -169,23 +169,28 @@ export function assertSubscriptionContract(
  * Polls until the payment leaves `pending`, the only status an off-session
  * charge can sit in.
  *
- * Most payments settle within milliseconds, so the reads come 50, 150 and
- * 350 ms after the first one, then on every whole 500 ms. A payment is never
- * seen later than a fixed 500 ms poll would have seen it.
+ * A fixed poll reads 500 ms after each read ends. Those reads still happen.
+ * Most payments settle within milliseconds, so extra reads come 50, 100 and
+ * 200 ms after the previous one ends, as long as one fits, at the last read's
+ * latency, before the next 500 ms read. With a steady read latency, a payment
+ * is never seen later than the fixed poll would have seen it.
  */
 export async function settledPayment(id: string): Promise<Payment> {
-  const start = Date.now();
-  const deadline = start + SETTLE_TIMEOUT;
-  let step = SETTLE_FIRST_POLL;
-  let pollAt = step;
+  const deadline = Date.now() + SETTLE_TIMEOUT;
+  let gap = SETTLE_FIRST_POLL;
+  let readStart = Date.now();
   let payment = await GetPayment(id);
+  let readEnd = Date.now();
+  let intervalReadAt = readEnd + SETTLE_INTERVAL;
   while (!isTerminalPaymentStatus(payment.status) && Date.now() < deadline) {
-    await delay(Math.max(0, start + pollAt - Date.now()));
+    const earlyAt = readEnd + gap;
+    const isEarly = earlyAt + (readEnd - readStart) <= intervalReadAt;
+    gap *= 2;
+    await delay(Math.max(0, (isEarly ? earlyAt : intervalReadAt) - Date.now()));
+    readStart = Date.now();
     payment = await GetPayment(id);
-    step *= 2;
-    const nextInterval =
-      (Math.floor(pollAt / SETTLE_INTERVAL) + 1) * SETTLE_INTERVAL;
-    pollAt = Math.min(pollAt + step, nextInterval);
+    readEnd = Date.now();
+    if (!isEarly) intervalReadAt = readEnd + SETTLE_INTERVAL;
   }
   return payment;
 }
