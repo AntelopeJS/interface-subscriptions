@@ -169,11 +169,12 @@ export function assertSubscriptionContract(
  * Polls until the payment leaves `pending`, the only status an off-session
  * charge can sit in.
  *
- * A fixed poll reads 500 ms after each read ends. Those reads still happen.
- * Most payments settle within milliseconds, so extra reads come 50, 100 and
- * 200 ms after the previous one ends, as long as one fits, at the last read's
- * latency, before the next 500 ms read. With a steady read latency, a payment
- * is never seen later than the fixed poll would have seen it.
+ * A fixed poll reads 500 ms after each read ends, and so does this one. Most
+ * payments settle within milliseconds, so extra reads come after the previous
+ * read ends, 50 ms first and twice as long each time, whenever one fits, at
+ * the last read's latency, before the next 500 ms read. With a steady read
+ * latency, a payment is never seen later than the fixed poll would have seen
+ * it.
  */
 export async function settledPayment(id: string): Promise<Payment> {
   const deadline = Date.now() + SETTLE_TIMEOUT;
