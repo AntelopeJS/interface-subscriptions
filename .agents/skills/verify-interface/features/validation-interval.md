@@ -1,6 +1,8 @@
 ---
 covers:
   - src/validation.ts
+  - src/errors.ts
+  - src/types.ts
 docs:
   - docs/4.implementing.md
   - docs/2.subscriptions.md
