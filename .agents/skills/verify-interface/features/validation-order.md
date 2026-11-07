@@ -1,6 +1,7 @@
 ---
 covers:
   - src/validation.ts
+  - src/errors.ts
 docs:
   - docs/4.implementing.md
 journeys:
