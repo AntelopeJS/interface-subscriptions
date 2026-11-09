@@ -32,17 +32,35 @@ export const SHORTEST_MONTH_MS = SHORTEST_MONTH_DAYS * DAY_MS;
 export const LONGEST_MONTH_MS = LONGEST_MONTH_DAYS * DAY_MS;
 export const TRIAL_DAYS = 14;
 
-/**
- * Providers keep creation times and schedule times to the second. Two
- * subscriptions created within the same second may list in either order, and a
- * requested trial end or billing anchor comes back truncated to the second.
- */
-export const PROVIDER_CLOCK_RESOLUTION_MS = 1100;
 const SECOND_MS = 1000;
+const DECIMAL = 10;
+const TICK_MARGIN = 1.1;
 
 /** A time `ahead` from now, on a whole second, which every provider can echo exactly. */
 export function inWholeSeconds(ahead: number): number {
   return Math.floor((Date.now() + ahead) / SECOND_MS) * SECOND_MS;
+}
+
+/**
+ * When a subscription created after `subscription` lists as newer than it.
+ *
+ * A provider keeps creation times to its own tick, the second at the coarsest,
+ * and two subscriptions created within one tick may list in either order. The
+ * zeros `createdAt` ends with bound that tick from above. `returnedAt` is when
+ * the call that created `subscription` returned, after the provider stamped it,
+ * on a monotonic clock such as `performance.now()`, and the deadline is on that
+ * clock. It holds whatever the provider's clock is offset by, as long as that
+ * offset stays constant.
+ */
+export function listsAsNewerFrom(
+  subscription: Subscription,
+  returnedAt: number,
+): number {
+  let tick = 1;
+  while (tick < SECOND_MS && subscription.createdAt % (tick * DECIMAL) === 0) {
+    tick *= DECIMAL;
+  }
+  return returnedAt + Math.ceil(tick * TICK_MARGIN);
 }
 
 /** An identifier no provider has a subscription for. */
