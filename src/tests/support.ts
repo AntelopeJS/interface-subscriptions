@@ -48,8 +48,9 @@ export function inWholeSeconds(ahead: number): number {
  * and two subscriptions created within one tick may list in either order. The
  * zeros `createdAt` ends with bound that tick from above. `returnedAt` is when
  * the call that created `subscription` returned, after the provider stamped it,
- * so the deadline holds whatever the offset between the provider's clock and
- * this one.
+ * on a monotonic clock such as `performance.now()`, and the deadline is on that
+ * clock. It holds whatever the provider's clock is offset by, as long as that
+ * offset stays constant.
  */
 export function listsAsNewerFrom(
   subscription: Subscription,

@@ -157,9 +157,9 @@ describe(`reading subscriptions back (${CHARGEABLE})`, function () {
   it("lists a customer's subscriptions newest first, and no one else's", async () => {
     const payer = await newPayer();
     const older = await subscribe(payer);
-    const newerFrom = listsAsNewerFrom(older, Date.now());
+    const newerFrom = listsAsNewerFrom(older, performance.now());
     await subscribe(await newPayer());
-    await delay(Math.max(0, newerFrom - Date.now()));
+    await delay(Math.max(0, newerFrom - performance.now()));
     const newer = await subscribe(payer, {
       trialEnd: inWholeSeconds(TRIAL_DAYS * DAY_MS),
     });

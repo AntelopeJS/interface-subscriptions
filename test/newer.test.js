@@ -36,6 +36,10 @@ describe("listsAsNewerFrom", () => {
     assert.ok(waitAfter(1_790_000_001_000) > 1000);
   });
 
+  it("waits no more than about a second, however many zeros a stamp ends with", () => {
+    assert.ok(waitAfter(1_790_000_000_000) < 2000);
+  });
+
   it("waits only milliseconds for a provider that keeps milliseconds", () => {
     assert.ok(waitAfter(1_790_000_001_234) < 10);
   });
