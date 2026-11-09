@@ -13,7 +13,6 @@ import {
   CHARGEABLE,
   DAY_MS,
   DECLINES_LATER,
-  PROVIDER_CLOCK_RESOLUTION_MS,
   LONGEST_MONTH_MS,
   PERIOD_VALUE,
   SHORTEST_MONTH_MS,
@@ -22,6 +21,7 @@ import {
   TEST_METHOD_DECLINES_LATER,
   TRIAL_DAYS,
   inWholeSeconds,
+  listsAsNewerFrom,
   assertSubscriptionContract,
   key,
   monthly,
@@ -156,13 +156,13 @@ describe(`reading subscriptions back (${CHARGEABLE})`, function () {
 
   it("lists a customer's subscriptions newest first, and no one else's", async () => {
     const payer = await newPayer();
-    const stranger = await newPayer();
     const older = await subscribe(payer);
-    await delay(PROVIDER_CLOCK_RESOLUTION_MS);
+    const newerFrom = listsAsNewerFrom(older, Date.now());
+    await subscribe(await newPayer());
+    await delay(Math.max(0, newerFrom - Date.now()));
     const newer = await subscribe(payer, {
       trialEnd: inWholeSeconds(TRIAL_DAYS * DAY_MS),
     });
-    await subscribe(stranger);
 
     const listed = await ListSubscriptions(payer.customer);
     assert.deepEqual(
