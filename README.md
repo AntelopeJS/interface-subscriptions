@@ -167,7 +167,7 @@ SubscriptionEvents.register("billing", async (event) => {
 
 | Package                         | Supported        | Tested with |
 | ------------------------------- | ---------------- | ----------- |
-| `@antelopejs/interface-core`    | `>=0.0.5 <1.0.0` | `0.1.1`     |
+| `@antelopejs/interface-core`    | `>=0.0.5 <1.0.0` | `0.4.0`     |
 | `@antelopejs/interface-payment` | `>=0.0.2 <1.0.0` | `0.0.2`     |
 
 <!-- antelopejs-docs-compat:end -->
