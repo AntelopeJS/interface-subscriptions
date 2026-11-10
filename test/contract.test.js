@@ -1,5 +1,8 @@
 const assert = require("node:assert/strict");
-const { RegisteringProxy } = require("@antelopejs/interface-core");
+const {
+  IsInterfaceProxy,
+  RegisteringProxy,
+} = require("@antelopejs/interface-core");
 
 const subscriptions = require("#built");
 
@@ -11,8 +14,6 @@ const subscriptions = require("#built");
  * `src/tests`, against a real implementation.
  */
 
-const HELPERS = ["ValidateSubscriptionRequest"];
-
 const CALLS = [
   "CreateSubscription",
   "GetSubscription",
@@ -23,10 +24,7 @@ const CALLS = [
 
 it("declares every call the contract documents, and nothing undocumented", () => {
   const declared = Object.entries(subscriptions)
-    .filter(([, value]) => value instanceof Function)
-    .filter(([name]) => /^[A-Z]/.test(name))
-    .filter(([name]) => !name.endsWith("Error"))
-    .filter(([name]) => !HELPERS.includes(name))
+    .filter(([, value]) => IsInterfaceProxy(value?.proxy, "async"))
     .map(([name]) => name)
     .sort();
 
