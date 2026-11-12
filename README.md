@@ -1,10 +1,15 @@
-# `@antelopejs/interface-subscriptions`
+<a href="https://github.com/AntelopeJS/antelopejs"><img data-illustration src="./.github/readme/strip.svg" width="100%" alt="INTERFACE · SUBSCRIPTIONS: part of AntelopeJS, hexagonal architecture beyond your own code. A glowing button reads Star AntelopeJS."></a>
 
 <div align="center">
-<a href="https://www.npmjs.com/package/@antelopejs/interface-subscriptions"><img data-illustration alt="npm" src="https://img.shields.io/npm/v/@antelopejs/interface-subscriptions?style=for-the-badge&labelColor=000000&color=000000"></a>
-<a href="./LICENSE"><img data-illustration alt="License" src="https://img.shields.io/npm/l/@antelopejs/interface-subscriptions?style=for-the-badge&labelColor=000000&color=000000"></a>
-<a href="https://discord.gg/g4pFt6eXqu"><img data-illustration alt="Discord" src="https://img.shields.io/badge/Discord-18181B?logo=discord&style=for-the-badge&color=000000"></a>
-<a href="./docs/1.introduction.md"><img data-illustration alt="Docs" src="https://img.shields.io/badge/Docs-18181B?style=for-the-badge&color=000000"></a>
+
+# `@antelopejs/interface-subscriptions`
+
+<a href="https://www.npmjs.com/package/@antelopejs/interface-subscriptions"><img data-illustration alt="npm" src="https://img.shields.io/npm/v/@antelopejs/interface-subscriptions?style=for-the-badge&labelColor=000000&color=000000"></a> <a href="./LICENSE"><img data-illustration alt="License" src="https://img.shields.io/npm/l/@antelopejs/interface-subscriptions?style=for-the-badge&labelColor=000000&color=000000"></a> <a href="https://discord.gg/g4pFt6eXqu"><img data-illustration alt="Discord" src="https://img.shields.io/badge/Discord-18181B?logo=discord&style=for-the-badge&color=000000"></a> <a href="./docs/1.introduction.md"><img data-illustration alt="Documentation" src="https://img.shields.io/badge/Docs-18181B?style=for-the-badge&color=000000"></a> <a href="https://github.com/AntelopeJS/antelopejs"><img data-illustration alt="Star AntelopeJS" src="https://img.shields.io/github/stars/AntelopeJS/antelopejs?label=Star%20AntelopeJS&style=for-the-badge&labelColor=000000&color=000000&logo=github"></a>
+
+**The AntelopeJS contract for subscriptions. Bill a saved payment method every period, with trials and cancellation, without naming a provider.**
+
+[Documentation](./docs/1.introduction.md) · [Implementations](./docs/5.provider-capability-matrix.md) · [All interfaces and providers](https://github.com/AntelopeJS/antelopejs#ecosystem)
+
 </div>
 
 The AntelopeJS interface for subscriptions that work with any payment provider.
@@ -12,9 +17,7 @@ Bill a saved payment method every period, with trials, a billing anchor,
 cancellation now or at period end, and `past_due` reporting. Your code names no
 provider, and no consumer has to build a billing cycle of its own.
 
-Part of [AntelopeJS](https://github.com/AntelopeJS/antelopejs), the TypeScript framework where modules depend on contracts and the application chooses the provider. Built by the team behind [AntelopeJS DMS](https://github.com/AntelopeJS/dms).
-
-## Installation
+## Install
 
 ```bash
 pnpm add @antelopejs/interface-subscriptions
@@ -161,22 +164,6 @@ SubscriptionEvents.register("billing", async (event) => {
 `declare` line only gives it a type. Deduplicate events by `event.id`, as
 [Events](./docs/3.events.md) describes.
 
-## Compatibility
-
-<!-- antelopejs-docs-compat:start -->
-
-| Package                         | Supported        | Tested with |
-| ------------------------------- | ---------------- | ----------- |
-| `@antelopejs/interface-core`    | `>=0.0.5 <1.0.0` | `0.4.0`     |
-| `@antelopejs/interface-payment` | `>=0.0.2 <1.0.0` | `0.0.2`     |
-
-<!-- antelopejs-docs-compat:end -->
-
-The table lists the peer requirements in `package.json`. Development uses the
-same semver range for the payment interface. Check the requirements of your
-implementing module too. `@antelopejs/core` is a test runner for development,
-not a runtime peer.
-
 ## Conventions
 
 - **Built on the portable pair of the payment interface.** One on-session
@@ -190,16 +177,6 @@ not a runtime peer.
 - **`vendorData` is a read-only echo of JSON values.** No request accepts it.
 - **An optional trailing `provider` selects the payment account.** The payment
   interface uses the same argument.
-
-## Documentation
-
-| Document                                                             | Contents                                                      |
-| -------------------------------------------------------------------- | ------------------------------------------------------------- |
-| [Introduction](./docs/1.introduction.md)                             | Why a second interface, who fires renewals, the portable core |
-| [Subscriptions](./docs/2.subscriptions.md)                           | Creation, periods, trials and anchors, statuses, cancellation |
-| [Events](./docs/3.events.md)                                         | The event set, delivery, and the relation to payment webhooks |
-| [Implementing](./docs/4.implementing.md)                             | Native and fallback implementations, the conformance suite    |
-| [Provider capability matrix](./docs/5.provider-capability-matrix.md) | Which providers fire renewals themselves, and what that means |
 
 ## Development
 
@@ -235,12 +212,56 @@ executable specification for the rest.
 | `ANTELOPE_SUBSCRIPTIONS_TEST_EVENTS`                | Set when events can reach the test process. A native provider delivers them by webhook, which usually cannot. |
 | `ANTELOPE_PAYMENT_TEST_CURRENCY`                    | ISO-4217 code to run against. Defaults to `EUR`.                                                              |
 
+## Documentation
+
+| Document                                                             | Contents                                                      |
+| -------------------------------------------------------------------- | ------------------------------------------------------------- |
+| [Introduction](./docs/1.introduction.md)                             | Why a second interface, who fires renewals, the portable core |
+| [Subscriptions](./docs/2.subscriptions.md)                           | Creation, periods, trials and anchors, statuses, cancellation |
+| [Events](./docs/3.events.md)                                         | The event set, delivery, and the relation to payment webhooks |
+| [Implementing](./docs/4.implementing.md)                             | Native and fallback implementations, the conformance suite    |
+| [Provider capability matrix](./docs/5.provider-capability-matrix.md) | Which providers fire renewals themselves, and what that means |
+
+## Compatibility
+
+<!-- antelopejs-docs-compat:start -->
+
+| Package                         | Supported        | Tested with |
+| ------------------------------- | ---------------- | ----------- |
+| `@antelopejs/interface-core`    | `>=0.0.5 <1.0.0` | `0.4.0`     |
+| `@antelopejs/interface-payment` | `>=0.0.2 <1.0.0` | `0.0.2`     |
+
+<!-- antelopejs-docs-compat:end -->
+
+The table lists the peer requirements in `package.json`. Development uses the
+same semver range for the payment interface. Check the requirements of your
+implementing module too. `@antelopejs/core` is a test runner for development,
+not a runtime peer.
+
 ## Contributing
 
 Read [CONTRIBUTING.md](./CONTRIBUTING.md) and run the
 [development checks](#development) before you open a pull request. The local
 contract tests need no provider credentials. The provider conformance suite is a
 separate integration check.
+
+## Part of AntelopeJS
+
+This package belongs to [AntelopeJS](https://github.com/AntelopeJS/antelopejs), the TypeScript framework where modules depend on contracts and the application chooses the provider. The open-source back office [AntelopeJS DMS](https://github.com/AntelopeJS/dms) is built on it.
+
+<!-- antelopejs-framework-modules:start -->
+
+| Area         | Contracts                                                                                                                                                                                                                                                                                                                                                                                                                  | Providers                                                                                                                                                                                                                                           |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| API          | [`interface-api`](https://github.com/AntelopeJS/interface-api) · [`interface-api-util`](https://github.com/AntelopeJS/interface-api-util) · [`interface-data-api`](https://github.com/AntelopeJS/interface-data-api)                                                                                                                                                                                                       | [`api`](https://github.com/AntelopeJS/api)                                                                                                                                                                                                          |
+| Auth         | [`interface-auth`](https://github.com/AntelopeJS/interface-auth)                                                                                                                                                                                                                                                                                                                                                           | [`auth-jwt`](https://github.com/AntelopeJS/auth-jwt)                                                                                                                                                                                                |
+| Database     | [`interface-database`](https://github.com/AntelopeJS/interface-database) · [`interface-database-decorators`](https://github.com/AntelopeJS/interface-database-decorators) · [`interface-database-catalog`](https://github.com/AntelopeJS/interface-database-catalog) · [`interface-mongodb`](https://github.com/AntelopeJS/interface-mongodb) · [`interface-rethinkdb`](https://github.com/AntelopeJS/interface-rethinkdb) | [`postgres`](https://github.com/AntelopeJS/postgres) · [`mongodb`](https://github.com/AntelopeJS/mongodb) · [`rethinkdb`](https://github.com/AntelopeJS/rethinkdb)                                                                                  |
+| Redis        | [`interface-redis`](https://github.com/AntelopeJS/interface-redis) · [`interface-redis-scheduler`](https://github.com/AntelopeJS/interface-redis-scheduler)                                                                                                                                                                                                                                                                | [`redis`](https://github.com/AntelopeJS/redis)                                                                                                                                                                                                      |
+| Email        | [`interface-email`](https://github.com/AntelopeJS/interface-email)                                                                                                                                                                                                                                                                                                                                                         | [`nodemailer`](https://github.com/AntelopeJS/nodemailer) · [`brevo`](https://github.com/AntelopeJS/brevo)                                                                                                                                           |
+| File storage | [`interface-file-storage`](https://github.com/AntelopeJS/interface-file-storage)                                                                                                                                                                                                                                                                                                                                           | [`file-storage-local`](https://github.com/AntelopeJS/file-storage-local) · [`file-storage-s3`](https://github.com/AntelopeJS/file-storage-s3)                                                                                                       |
+| Payments     | [`interface-payment`](https://github.com/AntelopeJS/interface-payment) · **`interface-subscriptions`** · [`interface-stripe`](https://github.com/AntelopeJS/interface-stripe)                                                                                                                                                                                                                                              | [`stripe`](https://github.com/AntelopeJS/stripe) · [`mollie`](https://github.com/AntelopeJS/mollie) · [`checkout-com`](https://github.com/AntelopeJS/checkout-com) · [`payment-subscriptions`](https://github.com/AntelopeJS/payment-subscriptions) |
+
+<!-- antelopejs-framework-modules:end -->
 
 ## License
 
