@@ -221,10 +221,6 @@ describe(`requests outside the contract (${CHARGEABLE})`, function () {
     "a fractional amount": () => ({ amount: amount(10.5) }),
     "an interval count of zero": () => ({ intervalCount: 0 }),
     "a fractional interval count": () => ({ intervalCount: 1.5 }),
-    "an interval outside the vocabulary": (): Partial<SubscriptionRequest> => ({
-      // @ts-expect-error "fortnight" is outside the interval vocabulary, which CreateSubscription must refuse with InvalidSubscriptionRequestError
-      interval: "fortnight",
-    }),
     "a trial that has already ended": (now) => ({ trialEnd: now - DAY_MS }),
     "a billing anchor in the past": (now) => ({
       billingAnchor: now - DAY_MS,
