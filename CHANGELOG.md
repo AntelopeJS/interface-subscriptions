@@ -1,5 +1,36 @@
 # Changelog
 
+## v0.1.3
+
+[compare changes](https://github.com/AntelopeJS/interface-subscriptions/compare/v0.1.2...v0.1.3)
+
+### 📖 Documentation
+
+- **readme:** Adopt the AntelopeJS framework README style ([#36](https://github.com/AntelopeJS/interface-subscriptions/pull/36))
+
+### 📦 Build
+
+- **deps:** Bump @antelopejs/tooling-configs to 0.5.0 ([#34](https://github.com/AntelopeJS/interface-subscriptions/pull/34))
+- **deps:** Bump @antelopejs/tooling-configs to 0.5.1 ([#35](https://github.com/AntelopeJS/interface-subscriptions/pull/35))
+- **deps:** Move to tooling-configs 0.7.1 and cap @antelopejs ranges below the next minor ([#39](https://github.com/AntelopeJS/interface-subscriptions/pull/39))
+- Move to @antelopejs/tooling-configs 0.8 and the three-tier CI ([#40](https://github.com/AntelopeJS/interface-subscriptions/pull/40))
+
+### ✅ Tests
+
+- **conformance:** Send the out-of-vocabulary interval from plain JavaScript ([#37](https://github.com/AntelopeJS/interface-subscriptions/pull/37))
+
+### 🤖 CI
+
+- Run the check jobs on Windows beside Linux ([#38](https://github.com/AntelopeJS/interface-subscriptions/pull/38))
+
+#### ⚠️ Breaking Changes
+
+- **deps:** Move to tooling-configs 0.7.1 and cap @antelopejs ranges below the next minor ([#39](https://github.com/AntelopeJS/interface-subscriptions/pull/39))
+
+### ❤️ Contributors
+
+- Antony Rizzitelli
+
 ## v0.1.2
 
 [compare changes](https://github.com/AntelopeJS/interface-subscriptions/compare/v0.1.1...v0.1.2)
