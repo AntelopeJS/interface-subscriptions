@@ -51,7 +51,8 @@ describe(`cancelling (${CHARGEABLE})`, function () {
 
     assert.equal(canceled.status, "canceled");
     assert.equal(canceled.endReason, "requested");
-    assert.ok(canceled.endedAt! >= subscription.createdAt);
+    assert.ok(canceled.endedAt);
+    assert.ok(canceled.endedAt >= subscription.createdAt);
     assert.equal((await GetSubscription(subscription.id)).status, "canceled");
   });
 
