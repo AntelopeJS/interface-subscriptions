@@ -61,7 +61,8 @@ describe(`creating a subscription (${CHARGEABLE})`, function () {
     const payer = await newPayer();
     const subscription = await subscribe(payer);
 
-    const payment = await settledPayment(subscription.latestPayment!);
+    assert.ok(subscription.latestPayment);
+    const payment = await settledPayment(subscription.latestPayment);
     assert.equal(payment.status, "succeeded");
     assert.deepEqual(payment.amount, subscription.amount);
     assert.equal(payment.customer, payer.customer);

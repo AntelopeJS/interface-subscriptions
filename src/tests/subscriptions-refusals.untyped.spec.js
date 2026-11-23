@@ -13,11 +13,6 @@ const {
   InvalidSubscriptionRequestError,
 } = require("../index");
 
-/**
- * Requests the `SubscriptionRequest` type forbids, sent the way an untyped
- * caller sends them. Plain JavaScript, so no type check stands between the
- * value and the provider's own validation.
- */
 describe(`requests outside the contract (${CHARGEABLE})`, function () {
   this.timeout(SUITE_TIMEOUT);
 
