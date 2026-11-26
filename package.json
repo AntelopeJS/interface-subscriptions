@@ -73,7 +73,7 @@
     "@antelopejs/core": "~1.23.3",
     "@antelopejs/interface-core": ">=0.5.0 <0.6.0",
     "@antelopejs/interface-payment": ">=0.2.0 <0.3.0",
-    "@antelopejs/tooling-configs": ">=0.10.0 <0.11.0",
+    "@antelopejs/tooling-configs": "^0.10.7",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.19.15",
     "eslint-plugin-perfectionist": "^5.11.0",
@@ -91,7 +91,7 @@
     "@antelopejs/interface-core": ">=0.5.0 <0.6.0",
     "@antelopejs/interface-payment": ">=0.2.0 <0.3.0"
   },
-  "packageManager": "pnpm@10.6.5",
+  "packageManager": "pnpm@10.34.9",
   "antelopeJs": {
     "test": "src/antelope.test.ts",
     "skills": [
