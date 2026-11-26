@@ -6,14 +6,6 @@ const {
 
 const subscriptions = require("#built");
 
-/**
- * This package is a contract: the calls are `InterfaceFunction` declarations
- * with no body. What it does execute is the status helper, the error classes,
- * the frozen vocabularies and the event proxy, so that is what is covered
- * here. The calls themselves are covered by the shared conformance suite in
- * `src/tests`, against a real implementation.
- */
-
 const CALLS = [
   "CreateSubscription",
   "GetSubscription",
