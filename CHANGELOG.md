@@ -1,5 +1,40 @@
 # Changelog
 
+## v0.1.4
+
+[compare changes](https://github.com/AntelopeJS/interface-subscriptions/compare/v0.1.3...v0.1.4)
+
+### 🚀 Enhancements
+
+- **errors:** Export a brand guard for each subscription error ([#54](https://github.com/AntelopeJS/interface-subscriptions/pull/54))
+
+### 🩹 Fixes
+
+- **errors:** Accept unknown in the subscription error guards ([#55](https://github.com/AntelopeJS/interface-subscriptions/pull/55))
+
+### 📦 Build
+
+- **ci:** Move to the trunk CI caller and tooling-configs 0.8.9 ([#44](https://github.com/AntelopeJS/interface-subscriptions/pull/44))
+- Refuse package versions younger than 24 hours ([#49](https://github.com/AntelopeJS/interface-subscriptions/pull/49))
+
+### 🏡 Chore
+
+- Promote next to main ([#43](https://github.com/AntelopeJS/interface-subscriptions/pull/43))
+- Adopt tooling-configs 0.10 and satisfy the comment rule ([#48](https://github.com/AntelopeJS/interface-subscriptions/pull/48))
+- **deps:** Update dependency @types/node to v22.20.5 ([#50](https://github.com/AntelopeJS/interface-subscriptions/pull/50))
+- **deps:** Update dependency oxlint-tsgolint to v7.0.2008 ([#51](https://github.com/AntelopeJS/interface-subscriptions/pull/51))
+- **deps:** Update dependency rimraf to v6.1.4 ([#52](https://github.com/AntelopeJS/interface-subscriptions/pull/52))
+- **deps:** Update antelopejs tooling configs ([#53](https://github.com/AntelopeJS/interface-subscriptions/pull/53))
+
+### 🤖 CI
+
+- Re-sync the AntelopeJS pack for the release app ([#46](https://github.com/AntelopeJS/interface-subscriptions/pull/46))
+- Stop forwarding the retired RELEASE_GITHUB_TOKEN ([#47](https://github.com/AntelopeJS/interface-subscriptions/pull/47))
+
+### ❤️ Contributors
+
+- Antony Rizzitelli
+
 ## v0.1.3
 
 [compare changes](https://github.com/AntelopeJS/interface-subscriptions/compare/v0.1.2...v0.1.3)
