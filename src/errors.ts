@@ -2,6 +2,26 @@ import type { Payment } from "@antelopejs/interface-payment";
 
 import type { SubscriptionStatus } from "./types";
 
+const SUBSCRIPTION_ERROR_BRAND = Symbol.for(
+  "@antelopejs/interface-subscriptions/SubscriptionError",
+);
+const SUBSCRIPTION_NOT_FOUND_ERROR_BRAND = Symbol.for(
+  "@antelopejs/interface-subscriptions/SubscriptionNotFoundError",
+);
+const INVALID_SUBSCRIPTION_REQUEST_ERROR_BRAND = Symbol.for(
+  "@antelopejs/interface-subscriptions/InvalidSubscriptionRequestError",
+);
+const INVALID_SUBSCRIPTION_STATE_ERROR_BRAND = Symbol.for(
+  "@antelopejs/interface-subscriptions/InvalidSubscriptionStateError",
+);
+const SUBSCRIPTION_PAYMENT_ERROR_BRAND = Symbol.for(
+  "@antelopejs/interface-subscriptions/SubscriptionPaymentError",
+);
+
+function markBrand(error: SubscriptionError, symbol: symbol): void {
+  Object.defineProperty(error, symbol, { value: true });
+}
+
 /**
  * Base class for every error this interface raises.
  *
@@ -17,6 +37,7 @@ export class SubscriptionError extends Error {
   ) {
     super(message);
     this.name = "SubscriptionError";
+    markBrand(this, SUBSCRIPTION_ERROR_BRAND);
   }
 }
 
@@ -29,6 +50,7 @@ export class SubscriptionNotFoundError extends SubscriptionError {
   constructor(id: string, providerCode?: string) {
     super(`No such subscription: ${id}`, providerCode);
     this.name = "SubscriptionNotFoundError";
+    markBrand(this, SUBSCRIPTION_NOT_FOUND_ERROR_BRAND);
   }
 }
 
@@ -41,6 +63,7 @@ export class InvalidSubscriptionRequestError extends SubscriptionError {
   constructor(message: string, providerCode?: string) {
     super(message, providerCode);
     this.name = "InvalidSubscriptionRequestError";
+    markBrand(this, INVALID_SUBSCRIPTION_REQUEST_ERROR_BRAND);
   }
 }
 
@@ -58,6 +81,7 @@ export class InvalidSubscriptionStateError extends SubscriptionError {
   ) {
     super(message, providerCode);
     this.name = "InvalidSubscriptionStateError";
+    markBrand(this, INVALID_SUBSCRIPTION_STATE_ERROR_BRAND);
   }
 }
 
@@ -84,5 +108,60 @@ export class SubscriptionPaymentError extends SubscriptionError {
       providerCode,
     );
     this.name = "SubscriptionPaymentError";
+    markBrand(this, SUBSCRIPTION_PAYMENT_ERROR_BRAND);
   }
+}
+
+/** Anything a `catch` clause or a rejected promise can hand back. */
+export type Thrown =
+  | Error
+  | string
+  | number
+  | bigint
+  | boolean
+  | symbol
+  | null
+  | undefined;
+
+function hasBrand(value: Thrown, symbol: symbol): boolean {
+  return Object.hasOwn(new Object(value), symbol);
+}
+
+/**
+ * Whether `value` is a {@link SubscriptionError}, including every subclass.
+ *
+ * Matches on a registered brand rather than `instanceof` or `name`, so it
+ * holds across duplicate copies of this package and after a bundler renames
+ * classes.
+ */
+export function isSubscriptionError(value: Thrown): value is SubscriptionError {
+  return hasBrand(value, SUBSCRIPTION_ERROR_BRAND);
+}
+
+/** Whether `value` is a {@link SubscriptionNotFoundError}. */
+export function isSubscriptionNotFoundError(
+  value: Thrown,
+): value is SubscriptionNotFoundError {
+  return hasBrand(value, SUBSCRIPTION_NOT_FOUND_ERROR_BRAND);
+}
+
+/** Whether `value` is an {@link InvalidSubscriptionRequestError}. */
+export function isInvalidSubscriptionRequestError(
+  value: Thrown,
+): value is InvalidSubscriptionRequestError {
+  return hasBrand(value, INVALID_SUBSCRIPTION_REQUEST_ERROR_BRAND);
+}
+
+/** Whether `value` is an {@link InvalidSubscriptionStateError}. */
+export function isInvalidSubscriptionStateError(
+  value: Thrown,
+): value is InvalidSubscriptionStateError {
+  return hasBrand(value, INVALID_SUBSCRIPTION_STATE_ERROR_BRAND);
+}
+
+/** Whether `value` is a {@link SubscriptionPaymentError}. */
+export function isSubscriptionPaymentError(
+  value: Thrown,
+): value is SubscriptionPaymentError {
+  return hasBrand(value, SUBSCRIPTION_PAYMENT_ERROR_BRAND);
 }

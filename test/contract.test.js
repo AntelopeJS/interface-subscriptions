@@ -277,3 +277,46 @@ it("still enforces the portable shape when the provider owns relative dates", ()
     subscriptions.InvalidSubscriptionRequestError,
   );
 });
+
+const GUARDS = {
+  SubscriptionNotFoundError: subscriptions.isSubscriptionNotFoundError,
+  InvalidSubscriptionRequestError:
+    subscriptions.isInvalidSubscriptionRequestError,
+  InvalidSubscriptionStateError: subscriptions.isInvalidSubscriptionStateError,
+  SubscriptionPaymentError: subscriptions.isSubscriptionPaymentError,
+};
+
+for (const { name, build } of ERRORS) {
+  it(`the guard for ${name} accepts a ${name} and rejects every other error, a lookalike and a non-object`, () => {
+    assert.equal(GUARDS[name](build()), true);
+    assert.equal(subscriptions.isSubscriptionError(build()), true);
+    for (const other of ERRORS.filter((entry) => entry.name !== name)) {
+      assert.equal(GUARDS[name](other.build()), false, `rejects ${other.name}`);
+    }
+    assert.equal(
+      GUARDS[name](new subscriptions.SubscriptionError("base")),
+      false,
+    );
+    const lookalike = new Error("lookalike");
+    lookalike.name = name;
+    assert.equal(GUARDS[name](lookalike), false);
+    assert.equal(subscriptions.isSubscriptionError(lookalike), false);
+    for (const value of [undefined, null, "text", 1, {}]) {
+      assert.equal(GUARDS[name](value), false);
+    }
+  });
+}
+
+it("isSubscriptionError accepts the base class and still holds for a copy of the package", () => {
+  assert.equal(
+    subscriptions.isSubscriptionError(new subscriptions.SubscriptionError("x")),
+    true,
+  );
+  const foreign = new Error("foreign copy");
+  Object.defineProperty(
+    foreign,
+    Symbol.for("@antelopejs/interface-subscriptions/SubscriptionNotFoundError"),
+    { value: true },
+  );
+  assert.equal(subscriptions.isSubscriptionNotFoundError(foreign), true);
+});
