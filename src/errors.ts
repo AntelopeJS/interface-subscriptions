@@ -112,21 +112,6 @@ export class SubscriptionPaymentError extends SubscriptionError {
   }
 }
 
-/** Anything a `catch` clause or a rejected promise can hand back. */
-export type Thrown =
-  | Error
-  | string
-  | number
-  | bigint
-  | boolean
-  | symbol
-  | null
-  | undefined;
-
-function hasBrand(value: Thrown, symbol: symbol): boolean {
-  return Object.hasOwn(new Object(value), symbol);
-}
-
 /**
  * Whether `value` is a {@link SubscriptionError}, including every subclass.
  *
@@ -134,34 +119,42 @@ function hasBrand(value: Thrown, symbol: symbol): boolean {
  * holds across duplicate copies of this package and after a bundler renames
  * classes.
  */
-export function isSubscriptionError(value: Thrown): value is SubscriptionError {
-  return hasBrand(value, SUBSCRIPTION_ERROR_BRAND);
+export function isSubscriptionError(
+  value: unknown,
+): value is SubscriptionError {
+  return Object.hasOwn(new Object(value), SUBSCRIPTION_ERROR_BRAND);
 }
 
 /** Whether `value` is a {@link SubscriptionNotFoundError}. */
 export function isSubscriptionNotFoundError(
-  value: Thrown,
+  value: unknown,
 ): value is SubscriptionNotFoundError {
-  return hasBrand(value, SUBSCRIPTION_NOT_FOUND_ERROR_BRAND);
+  return Object.hasOwn(new Object(value), SUBSCRIPTION_NOT_FOUND_ERROR_BRAND);
 }
 
 /** Whether `value` is an {@link InvalidSubscriptionRequestError}. */
 export function isInvalidSubscriptionRequestError(
-  value: Thrown,
+  value: unknown,
 ): value is InvalidSubscriptionRequestError {
-  return hasBrand(value, INVALID_SUBSCRIPTION_REQUEST_ERROR_BRAND);
+  return Object.hasOwn(
+    new Object(value),
+    INVALID_SUBSCRIPTION_REQUEST_ERROR_BRAND,
+  );
 }
 
 /** Whether `value` is an {@link InvalidSubscriptionStateError}. */
 export function isInvalidSubscriptionStateError(
-  value: Thrown,
+  value: unknown,
 ): value is InvalidSubscriptionStateError {
-  return hasBrand(value, INVALID_SUBSCRIPTION_STATE_ERROR_BRAND);
+  return Object.hasOwn(
+    new Object(value),
+    INVALID_SUBSCRIPTION_STATE_ERROR_BRAND,
+  );
 }
 
 /** Whether `value` is a {@link SubscriptionPaymentError}. */
 export function isSubscriptionPaymentError(
-  value: Thrown,
+  value: unknown,
 ): value is SubscriptionPaymentError {
-  return hasBrand(value, SUBSCRIPTION_PAYMENT_ERROR_BRAND);
+  return Object.hasOwn(new Object(value), SUBSCRIPTION_PAYMENT_ERROR_BRAND);
 }
