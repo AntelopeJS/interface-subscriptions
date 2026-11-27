@@ -124,8 +124,7 @@ export type Thrown =
   | undefined;
 
 function hasBrand(value: Thrown, symbol: symbol): boolean {
-  // SAFETY: Object() boxes a primitive and returns an object unchanged, so hasOwn always receives an object.
-  return Object.hasOwn(Object(value) as Error, symbol);
+  return Object.hasOwn(new Object(value), symbol);
 }
 
 /**
