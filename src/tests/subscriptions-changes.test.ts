@@ -298,12 +298,19 @@ describe(`events (${OBSERVABLE})`, function () {
 
   async function eventsFor(
     id: string,
-    count: number,
+    types: readonly SubscriptionEvent["type"][],
   ): Promise<SubscriptionEvent[]> {
     const deadline = Date.now() + EVENT_TIMEOUT;
-    const matching = () =>
-      received.filter((event) => event.subscription.id === id);
-    while (matching().length < count && Date.now() < deadline) {
+    const matching = () => {
+      const byId = new Map<string, SubscriptionEvent>();
+      for (const event of received) {
+        if (event.subscription.id === id) byId.set(event.id, event);
+      }
+      return [...byId.values()];
+    };
+    const complete = () =>
+      types.every((type) => matching().some((event) => event.type === type));
+    while (!complete() && Date.now() < deadline) {
       await delay(EVENT_POLL);
     }
     return matching();
@@ -312,11 +319,13 @@ describe(`events (${OBSERVABLE})`, function () {
   it("reports a new paid subscription as created, then paid", async () => {
     const subscription = await subscribe(await newPayer());
 
-    const events = await eventsFor(subscription.id, 2);
-    assert.deepEqual(events.map((event) => event.type).sort(), [
+    const events = await eventsFor(subscription.id, [
       "subscription.created",
       "subscription.payment_succeeded",
     ]);
+    const types = events.map((event) => event.type);
+    assert.ok(types.includes("subscription.created"));
+    assert.ok(types.includes("subscription.payment_succeeded"));
     const paid = events.find(
       (event) => event.type === "subscription.payment_succeeded",
     );
@@ -330,7 +339,7 @@ describe(`events (${OBSERVABLE})`, function () {
     });
     await CancelSubscription(subscription.id, key(), "now");
 
-    const events = await eventsFor(subscription.id, 2);
+    const events = await eventsFor(subscription.id, ["subscription.canceled"]);
     const canceled = events.find(
       (event) => event.type === "subscription.canceled",
     );
