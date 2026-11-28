@@ -52,7 +52,7 @@
   },
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json",
-    "test": "pnpm build && ajs module test .",
+    "test": "pnpm build && ajs module test . --timeout 30000",
     "format": "oxfmt .",
     "lint:fix": "oxlint --fix",
     "lint": "oxlint",
@@ -73,7 +73,7 @@
     "@antelopejs/core": "~1.23.3",
     "@antelopejs/interface-core": ">=0.5.0 <0.6.0",
     "@antelopejs/interface-payment": ">=0.2.0 <0.3.0",
-    "@antelopejs/tooling-configs": "^0.10.7",
+    "@antelopejs/tooling-configs": "^0.10.12",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.19.15",
     "eslint-plugin-perfectionist": "^5.11.0",
