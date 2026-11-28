@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.1.5
+
+[compare changes](https://github.com/AntelopeJS/interface-subscriptions/compare/v0.1.4...v0.1.5)
+
+### 🩹 Fixes
+
+- **tests:** Wait for the expected event types in the events conformance tests ([#60](https://github.com/AntelopeJS/interface-subscriptions/pull/60))
+
+### 📦 Build
+
+- **ci:** Sync tooling-configs 0.10.12 ([#56](https://github.com/AntelopeJS/interface-subscriptions/pull/56))
+- **deps:** Move tooling-configs to 0.10.14 ([#59](https://github.com/AntelopeJS/interface-subscriptions/pull/59))
+
+### 🏡 Chore
+
+- **deps:** Update non-major dependencies ([#58](https://github.com/AntelopeJS/interface-subscriptions/pull/58))
+
+### ❤️ Contributors
+
+- Antony Rizzitelli
+
 ## v0.1.4
 
 [compare changes](https://github.com/AntelopeJS/interface-subscriptions/compare/v0.1.3...v0.1.4)
